@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Html 기초</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Noto+Sans+KR:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg-base: #16161e;
+  --bg-panel: #1a1b26;
+  --bg-raise: #20222f;
+  --bg-code: #13141c;
+  --line: #2a2e42;
+  --text-main: #c0caf5;
+  --text-dim: #6b7394;
+  --text-faint: #454a68;
+  --kw: #bb9af7;
+  --str: #9ece6a;
+  --tag: #f7768e;
+  --prop: #7aa2f7;
+  --num: #ff9e64;
+  --cm: #565f89;
+  --accent: #7dcfff;
+  --gutter-w: 44px;
+  --sidebar-w: 260px;
+  --toc-w: 230px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-main);
+  font-family: 'Noto Sans KR', sans-serif;
+  min-height: 100vh;
+}
+::selection { background: #3d59a1; color: #fff; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 48px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center;
+  padding: 0 16px;
+  z-index: 100;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.topbar .dots { display: flex; gap: 6px; margin-right: 16px; }
+.topbar .dots span { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+.topbar .dots span:nth-child(1) { background: #f7768e; }
+.topbar .dots span:nth-child(2) { background: #e0af68; }
+.topbar .dots span:nth-child(3) { background: #9ece6a; }
+.topbar .path { color: var(--text-faint); }
+.topbar .path b { color: var(--accent); font-weight: 500; }
+
+/* ---------- layout ---------- */
+.wrap { display: flex; padding-top: 48px; min-height: 100vh; }
+
+/* ---------- sidebar ---------- */
+.sidebar {
+  position: fixed; top: 48px; bottom: 0; left: 0; width: var(--sidebar-w);
+  background: var(--bg-panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 20px 0 40px;
+}
+.sidebar-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); padding: 0 20px 14px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px; margin: 1px 8px; border-radius: 6px;
+  color: var(--text-dim); text-decoration: none;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  border-left: 2px solid transparent;
+  transition: background .15s, color .15s;
+}
+.nav-item:hover { background: var(--bg-raise); color: var(--text-main); }
+.nav-item.active { background: var(--bg-raise); color: var(--accent); border-left-color: var(--accent); }
+.nav-icon { opacity: .7; font-size: 12px; width: 14px; text-align: center; }
+.sidebar-footer {
+  margin-top: 24px; padding: 14px 20px 0 20px;
+  border-top: 1px solid var(--line);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-faint); line-height: 1.7;
+}
+
+/* ---------- main ---------- */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-right: var(--toc-w);
+  flex: 1;
+  display: flex;
+}
+.gutter {
+  width: var(--gutter-w);
+  flex-shrink: 0;
+}
+
+/* ---------- right toc ---------- */
+.toc {
+  position: fixed; top: 48px; bottom: 0; right: 0; width: var(--toc-w);
+  background: var(--bg-panel);
+  border-left: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 20px 0 40px;
+}
+.toc-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); padding: 0 18px 14px;
+}
+.toc-item {
+  display: flex; align-items: baseline; gap: 9px;
+  padding: 7px 18px; margin: 1px 6px; border-radius: 6px;
+  color: var(--text-dim); text-decoration: none;
+  font-size: 13px;
+  border-right: 2px solid transparent;
+  transition: background .15s, color .15s;
+}
+.toc-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); flex-shrink: 0; }
+.toc-item:hover { background: var(--bg-raise); color: var(--text-main); }
+.toc-item.active { background: var(--bg-raise); color: var(--accent); border-right-color: var(--accent); }
+.toc-item.active .toc-num { color: var(--accent); }
+
+.hero {
+  padding: 64px 48px 40px;
+  border-bottom: 1px solid var(--line);
+}
+.hero {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent);
+  letter-spacing: 0.1em; margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700; margin: 0 0 14px; line-height: 1.25;
+  color: #fff;
+}
+.hero h1 .brk { color: var(--text-faint); }
+.hero p { color: var(--text-dim); max-width: 640px; line-height: 1.7; font-size: 15px; margin: 0; }
+
+.content { flex: 1; min-width: 0; padding-bottom: 80px; }
+
+/* ---------- file pane / section ---------- */
+.filepane { scroll-margin-top: 56px; }
+.tab-bar {
+  display: flex; border-bottom: 1px solid var(--line);
+  background: var(--bg-base);
+  padding: 0 40px;
+}
+.tab {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  padding: 12px 18px 11px; color: var(--text-main);
+  border-bottom: 2px solid var(--accent);
+  display: flex; align-items: center; gap: 8px;
+}
+.tab-icon { color: var(--accent); font-size: 11px; }
+
+.pane-body { padding: 36px 40px 20px; }
+.pane-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px; font-weight: 600; color: #fff;
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 6px;
+}
+.pane-num { color: var(--text-faint); font-size: 15px; }
+.intro { color: var(--text-dim); margin: 6px 0 28px; line-height: 1.7; font-size: 14.5px; }
+
+.entries { display: flex; flex-direction: column; gap: 22px; }
+.entry {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px 20px;
+}
+.entry-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.term {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15.5px; font-weight: 600; color: #fff; margin: 0;
+}
+.desc { margin: 4px 0 4px 16px; color: var(--text-dim); font-size: 13.8px; line-height: 1.7; }
+.tip { margin: 8px 0 4px 16px; font-size: 13px; color: #e0af68; background: rgba(224,175,104,0.08); padding: 8px 12px; border-radius: 6px; display: inline-block; }
+.ex { margin: 8px 0 4px 16px; font-size: 13px; color: var(--text-dim); }
+.ex-label { font-family: 'JetBrains Mono', monospace; color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; font-size: 10px; padding: 1px 5px; margin-right: 8px; }
+
+pre.code {
+  margin: 12px 0 0;
+  background: var(--bg-code);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; line-height: 1.65;
+}
+pre.code code { color: var(--text-main); white-space: pre; }
+.tag { color: var(--tag); }
+.str { color: var(--str); }
+.kw  { color: var(--kw); }
+.prop { color: var(--prop); }
+.num { color: var(--num); }
+.cm  { color: var(--cm); font-style: italic; }
+
+/* ---------- ref table ---------- */
+.ref-table {
+  margin-top: 26px; width: 100%; border-collapse: collapse;
+  font-size: 13.5px; font-family: 'JetBrains Mono', monospace;
+  border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+}
+.ref-table th, .ref-table td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+.ref-table th { background: var(--bg-raise); color: var(--accent); font-weight: 600; }
+.ref-table td { color: var(--text-dim); }
+.ref-table tr:last-child td { border-bottom: none; }
+
+footer {
+  padding: 30px 40px 60px;
+  color: var(--text-faint); font-family: 'JetBrains Mono', monospace; font-size: 12px;
+}
+
+/* ---------- scrollbar ---------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px) {
+  .toc { display: none; }
+  .main { margin-right: 0; }
+}
+
+@media (max-width: 880px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 44px 20px 28px; }
+  .tab-bar, .pane-body { padding-left: 20px; padding-right: 20px; }
+  footer { padding-left: 20px; padding-right: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+/* ---------- search ---------- */
+.sidebar-search { padding: 0 20px 12px; }
+.sidebar-search-box { position: relative; }
+.sidebar-search-box input {
+  width: 100%;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px 8px 30px;
+  color: var(--text-main);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  outline: none;
+  transition: border-color .15s;
+}
+.sidebar-search-box input:focus { border-color: var(--accent); }
+.sidebar-search-box svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; stroke: var(--text-faint); pointer-events: none; }
+.search-result-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint); padding: 0 20px 14px; min-height: 14px; }
+
+/* ---------- collapse / expand ---------- */
+.entry-head { cursor: pointer; }
+.entry-chevron { margin-left: auto; width: 14px; height: 14px; stroke: var(--text-faint); flex-shrink: 0; transition: transform .2s; }
+.entry.collapsed .entry-chevron { transform: rotate(-90deg); }
+.entry.collapsed .entry-body { display: none; }
+.entry.search-hidden { display: none; }
+.filepane.search-hidden { display: none; }
+
+/* ---------- code copy button ---------- */
+pre.code { position: relative; }
+.copy-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 2;
+  transition: all .15s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-btn.copied { border-color: #9ece6a; color: #9ece6a; }
+
+/* ---------- back to top ---------- */
+.top-btn {
+  position: fixed; right: 28px; bottom: 28px;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  opacity: 0; pointer-events: none; transform: translateY(10px);
+  transition: opacity .2s, transform .2s;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  z-index: 300;
+}
+.top-btn.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.top-btn svg { width: 19px; height: 19px; stroke: var(--bg-base); stroke-width: 2.5; }
+
+/* ---------- extended entry fields: 언제 사용하는가 / 실행 결과 / 관련 개념 ---------- */
+.field-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: .04em;
+  border-radius: 4px; padding: 1px 6px;
+  margin-right: 8px; display: inline-block;
+  border: 1px solid currentColor;
+  vertical-align: middle;
+}
+.when { margin: 8px 0 4px 16px; font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+.when .field-label { color: var(--prop); }
+.result { margin: 10px 0 0 16px; }
+.result .field-label { color: #9ece6a; }
+.result pre {
+  margin: 6px 0 0; background: var(--bg-code); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 14px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; color: #9ece6a; overflow-x: auto; white-space: pre-wrap;
+}
+.related { margin: 10px 0 0 16px; font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+.related .field-label { color: var(--tag); }
+.related .rel-tag {
+  display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+  color: var(--accent); background: rgba(125,207,255,0.08);
+  border: 1px solid rgba(125,207,255,0.25); border-radius: 4px;
+  padding: 2px 7px; margin: 3px 4px 0 0;
+}
+
+/* ---------- 재구성된 항목 라벨 색상 ---------- */
+.desc-label { color: var(--prop); }
+.tip-label { color: #e0af68; }
+</style>
+</head>
+<body>
+<div class="topbar">
+<div class="dots"><span></span><span></span><span></span></div>
+<div class="path">HTML <span style="color:var(--text-faint)">/</span> <b id="crumb">html</b></div>
+</div>
+<div class="wrap">
+<nav class="sidebar">
+<div class="sidebar-title"> html</div>
+<a class="nav-item" data-id="html-basic" href="#html-basic">
+<span class="nav-name">html-기본</span>
+</a>
+<a class="nav-item" data-id="html-advanced" href="#html-advanced">
+<span class="nav-name">html-심화</span>
+</a>
+<a class="nav-item" data-id="css-basic" href="#css-basic">
+<span class="nav-name">css-기본</span>
+</a>
+<a class="nav-item" data-id="css-advanced" href="#css-advanced">
+<span class="nav-name">css-심화</span>
+</a>
+<a class="nav-item" data-id="js-basic" href="#js-basic">
+<span class="nav-name">js-기본</span>
+</a>
+<a class="nav-item" data-id="js-advanced" href="#js-advanced">
+<span class="nav-name">js-심화</span>
+</a>
+<a class="nav-item" data-id="examples" href="#examples">
+<span class="nav-name">실전-예제</span>
+</a>
+<a class="nav-item" data-id="express" href="#express">
+<span class="nav-name">express</span>
+</a>
+<a class="nav-item" data-id="http" href="#http">
+<span class="nav-name">http-메서드</span>
+</a>
+<a class="nav-item" data-id="http-advanced" href="#http-advanced">
+<span class="nav-name">http-심화</span>
+</a>
+<a class="nav-item" data-id="express-advanced" href="#express-advanced">
+<span class="nav-name">express-심화</span>
+</a>
+<a class="nav-item" data-id="rest-api" href="#rest-api">
+<span class="nav-name">rest-api</span>
+</a>
+<a class="nav-item" data-id="auth" href="#auth">
+<span class="nav-name">로그인-시스템</span>
+</a>
+<a class="nav-item" data-id="encryption" href="#encryption">
+<span class="nav-name">암호화</span>
+</a>
+<a class="nav-item" data-id="database" href="#database">
+<span class="nav-name">데이터베이스</span>
+</a>
+<a class="nav-item" data-id="nodejs-mysql" href="#nodejs-mysql">
+<span class="nav-name">nodejs-mysql-실전</span>
+</a>
+<a class="nav-item" data-id="file-upload" href="#file-upload">
+<span class="nav-name">파일-업로드</span>
+</a>
+<a class="nav-item" data-id="security" href="#security">
+<span class="nav-name">보안</span>
+</a>
+<a class="nav-item" data-id="deploy" href="#deploy">
+<span class="nav-name">서버-배포</span>
+</a>
+<a class="nav-item" data-id="git" href="#git">
+<span class="nav-name">git</span>
+</a>
+<div class="sidebar-footer">html 기초부터 중급<br/><br/></div>
+</nav>
+<nav class="toc">
+<div class="toc-title">목차</div>
+<a class="toc-item" data-id="html-basic" href="#html-basic">
+<span class="toc-num">01</span>
+<span class="toc-label">HTML 기본 구조</span>
+</a>
+<a class="toc-item" data-id="html-advanced" href="#html-advanced">
+<span class="toc-num">02</span>
+<span class="toc-label">HTML 태그 더 알아보기</span>
+</a>
+<a class="toc-item" data-id="css-basic" href="#css-basic">
+<span class="toc-num">03</span>
+<span class="toc-label">CSS 기본</span>
+</a>
+<a class="toc-item" data-id="css-advanced" href="#css-advanced">
+<span class="toc-num">04</span>
+<span class="toc-label">CSS 심화</span>
+</a>
+<a class="toc-item" data-id="js-basic" href="#js-basic">
+<span class="toc-num">05</span>
+<span class="toc-label">JavaScript 기본</span>
+</a>
+<a class="toc-item" data-id="js-advanced" href="#js-advanced">
+<span class="toc-num">06</span>
+<span class="toc-label">JavaScript 심화 (DOM &amp; 기타)</span>
+</a>
+<a class="toc-item" data-id="examples" href="#examples">
+<span class="toc-num">07</span>
+<span class="toc-label">실전 예제 모음</span>
+</a>
+<a class="toc-item" data-id="express" href="#express">
+<span class="toc-num">08</span>
+<span class="toc-label">Express</span>
+</a>
+<a class="toc-item" data-id="http" href="#http">
+<span class="toc-num">09</span>
+<span class="toc-label">HTTP 메서드</span>
+</a>
+<a class="toc-item" data-id="http-advanced" href="#http-advanced">
+<span class="toc-num">10</span>
+<span class="toc-label">HTTP 심화</span>
+</a>
+<a class="toc-item" data-id="express-advanced" href="#express-advanced">
+<span class="toc-num">11</span>
+<span class="toc-label">Express 심화</span>
+</a>
+<a class="toc-item" data-id="rest-api" href="#rest-api">
+<span class="toc-num">12</span>
+<span class="toc-label">REST API</span>
+</a>
+<a class="toc-item" data-id="auth" href="#auth">
+<span class="toc-num">13</span>
+<span class="toc-label">로그인 시스템</span>
+</a>
+<a class="toc-item" data-id="encryption" href="#encryption">
+<span class="toc-num">14</span>
+<span class="toc-label">암호화</span>
+</a>
+<a class="toc-item" data-id="database" href="#database">
+<span class="toc-num">15</span>
+<span class="toc-label">데이터베이스</span>
+</a>
+<a class="toc-item" data-id="nodejs-mysql" href="#nodejs-mysql">
+<span class="toc-num">16</span>
+<span class="toc-label">Node.js + MySQL 실전</span>
+</a>
+<a class="toc-item" data-id="file-upload" href="#file-upload">
+<span class="toc-num">17</span>
+<span class="toc-label">파일 업로드</span>
+</a>
+<a class="toc-item" data-id="security" href="#security">
+<span class="toc-num">18</span>
+<span class="toc-label">보안</span>
+</a>
+<a class="toc-item" data-id="deploy" href="#deploy">
+<span class="toc-num">19</span>
+<span class="toc-label">서버 배포</span>
+</a>
+<a class="toc-item" data-id="git" href="#git">
+<span class="toc-num">20</span>
+<span class="toc-label">Git</span>
+</a>
+</nav>
+<div class="main">
+<div class="content">
+<div class="hero">
+<h1>Html<span class="brk">.</span></h1>
+<p>오른쪽 목차 및 왼쪽 파일 목록을 눌러 원하는 위치로 이동할 수 있습니다.</p>
+</div>
+<section class="filepane" id="html-basic">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">◆</span>html-기본</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">01</span>HTML 기본 구조</div>
+<p class="intro">웹페이지의 뼈대를 만드는 언어. 태그로 내용을 감싸서 의미를 부여한다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">&lt;!DOCTYPE html&gt;</h3></div><p class="desc"><span class="field-label desc-label">설명</span>HTML5 문서라는 선언. 거의 무조건 첫 줄에 적는다. 모든 .html 파일의 첫 줄에 한 번만 작성한다. 이 선언(html5)이 없으면 브라우저가 옛날 방식(쿼크 모드)으로 해석해서 레이아웃이 예상과 다르게 깨질 수 있다.</p><pre class="code"><code>&lt;!DOCTYPE html&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>(화면에 보이지 않음 — 브라우저 렌더링 모드만 결정)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">html 태그</span><span class="rel-tag">meta charset</span><span class="rel-tag">쿼크 모드</span></p><p class="tip"><span class="field-label tip-label">주의</span> 대소문자를 구분하지 않지만 관례상 소문자로 쓴다. HTML5 이전 버전들처럼 긴 DTD 선언을 쓸 필요가 없다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">head</h3></div><p class="desc"><span class="field-label desc-label">설명</span>웹페이지의 정보를 담는 영역이다. 화면에 직접 보이지 않는다. 페이지 제목, 문자 인코딩, 연결할 CSS/JS 파일, 검색엔진용 메타 정보를 지정할 때 사용한다. body를 작성하기 전에 항상 먼저 구성한다.</p><pre class="code"><code>&lt;<span class="tag">head</span>&gt;
+  &lt;<span class="tag">meta</span> charset=<span class="str">"UTF-<span class="num">8</span>"</span>&gt;
+  &lt;<span class="tag">link</span> rel=<span class="str">"stylesheet"</span> href=<span class="str">"style.css"</span>&gt;
+  &lt;<span class="tag">script</span> src=<span class="str">"script.js"</span>&gt;&lt;/<span class="tag">script</span>&gt;
+&lt;/<span class="tag">head</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>(화면에는 아무것도 표시되지 않지만, style.css가 적용되고 script.js가 실행됨)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">meta 태그</span><span class="rel-tag">link rel="stylesheet"</span><span class="rel-tag">script src</span></p><p class="tip"><span class="field-label tip-label">주의</span> link의 href, script의 src는 파일 이름이 바뀌면 같이 바꿔야 한다. meta charset은 한글이 깨지지 않게 해준다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">body</h3></div><p class="desc"><span class="field-label desc-label">설명</span>사용자가 실제로 보는 부분이다. 제목, 사진, 버튼, 문장, 링크가 전부 body 안에 들어간다. 사용자에게 보여줄 모든 콘텐츠(글, 이미지, 버튼 등)를 작성할 때 사용한다. head 작성이 끝난 뒤 이어서 작성한다.</p><pre class="code"><code>&lt;<span class="tag">body</span>&gt;
+
+&lt;/<span class="tag">body</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>(그 자체는 출력 없음 — 내부에 작성한 요소들이 화면에 렌더링됨)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">head</span><span class="rel-tag">html 태그</span><span class="rel-tag">DOM</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">제목 태그 h1~h6</h3></div><p class="desc"><span class="field-label desc-label">설명</span>html엔 제목이 6단계 있다. 숫자가 작을수록 더 중요한 제목이다. 문서나 섹션의 제목을 나타낼 때 사용한다. 글자를 크게 보이려는 용도가 아니라 문서 구조(개요)를 나타내는 용도로 사용해야 한다.</p><pre class="code"><code>&lt;<span class="tag">h1</span>&gt;가장 중요한 제목&lt;/<span class="tag">h1</span>&gt;
+&lt;<span class="tag">h2</span>&gt;큰 제목 아래의 소제목&lt;/<span class="tag">h2</span>&gt;
+&lt;<span class="tag">h3</span>&gt;더 작은 제목&lt;/<span class="tag">h3</span>&gt;
+&lt;<span class="tag">h4</span>&gt;...&lt;/<span class="tag">h4</span>&gt;
+&lt;<span class="tag">h5</span>&gt;...&lt;/<span class="tag">h5</span>&gt;
+&lt;<span class="tag">h6</span>&gt;...&lt;/<span class="tag">h6</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>숫자가 작을수록 크고 굵은 글씨로 렌더링됨 (h1이 가장 큼)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">문서 개요(outline)</span><span class="rel-tag">SEO</span><span class="rel-tag">font-size</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">p</h3></div><p class="desc"><span class="field-label desc-label">설명</span>문장을 작성할 때 사용한다. 단락 단위의 글을 작성할 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">p</span>&gt;내용을 입력합니다&lt;/<span class="tag">p</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>문장이 하나의 문단으로 표시되며 위아래 여백이 자동으로 생김</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">span</span><span class="rel-tag">br</span><span class="rel-tag">margin</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">br</h3></div><p class="desc"><span class="field-label desc-label">설명</span>줄바꿈을 할 때 사용한다. 문장 중간에서 강제로 줄을 바꿔야 할 때 사용한다. 단락을 나누고 싶다면 p 태그를 새로 쓰는 것이 더 적절하다.</p><pre class="code"><code>첫 줄&lt;<span class="tag">br</span>&gt;둘째 줄</code></pre><div class="result"><span class="field-label">결과</span><pre>"첫 줄" 다음에 줄바꿈되어 "둘째 줄"이 출력됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">p 태그</span><span class="rel-tag">white-space (CSS)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">img</h3></div><p class="desc"><span class="field-label desc-label">설명</span>이미지를 삽입한다. width, height 속성으로 크기를 지정한다. 사진, 아이콘, 로고 등 시각 자료를 페이지에 보여줘야 할 때 사용한다. 배경 장식용 이미지는 CSS의 background-image를 쓰는 것이 더 적절하다.</p><pre class="code"><code>&lt;<span class="tag">img</span> src=<span class="str">"apple.png"</span>&gt;
+&lt;<span class="tag">img</span> src=<span class="str">"https://example.com/apple.png"</span>&gt;
+&lt;<span class="tag">img</span> src=<span class="str">"apple.png"</span> width=<span class="str">"<span class="num">300</span>"</span> height=<span class="str">"<span class="num">200</span>"</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>화면에 apple.png 이미지가 300x200 크기로 렌더링됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">alt 속성</span><span class="rel-tag">background-image (CSS)</span><span class="rel-tag">srcset (반응형 이미지)</span></p><p class="tip"><span class="field-label tip-label">주의</span> alt 속성을 꼭 넣어주면 이미지가 로드되지 않을 때 대체 텍스트가 보이고, 스크린 리더 접근성에도 도움이 된다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">a</h3></div><p class="desc"><span class="field-label desc-label">설명</span>링크를 만든다. 다른 페이지, 다른 사이트, 또는 페이지 내 특정 위치로 이동하는 링크를 만들 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">a</span> href=<span class="str">"https://google.com"</span>&gt;구글&lt;/<span class="tag">a</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>파란색 밑줄 텍스트 "구글"이 표시되고 클릭 시 google.com으로 이동</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">target="_blank"</span><span class="rel-tag">href</span><span class="rel-tag">button</span></p><p class="tip"><span class="field-label tip-label">주의</span> 새 탭에서 열고 싶다면 target="_blank"를 붙인다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">button</h3></div><p class="desc"><span class="field-label desc-label">설명</span>클릭할 수 있는 버튼을 만든다. 클릭 시 어떤 동작(폼 제출, 이벤트 실행 등)이 필요한 요소를 만들 때 사용한다. 단순 페이지 이동이면 a 태그가 더 적합하다.</p><pre class="code"><code>&lt;<span class="tag">button</span>&gt;버튼&lt;/<span class="tag">button</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>클릭 가능한 사각형 버튼이 화면에 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">onclick</span><span class="rel-tag">a 태그</span><span class="rel-tag">form submit</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">input (text / password / checkbox / radio)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>type 속성으로 입력창의 종류가 바뀐다. 사용자로부터 텍스트, 비밀번호, 체크박스, 라디오 버튼 등의 값을 입력받아야 할 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">input</span> type=<span class="str">"text"</span>&gt;
+&lt;<span class="tag">input</span> type=<span class="str">"password"</span>&gt;
+&lt;<span class="tag">input</span> type=<span class="str">"checkbox"</span>&gt;
+&lt;<span class="tag">input</span> type=<span class="str">"radio"</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>type 값에 따라 텍스트 입력창, 비밀번호 입력창(●표시), 체크박스, 라디오 버튼이 각각 렌더링됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">form</span><span class="rel-tag">placeholder</span><span class="rel-tag">.value (JS)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">ul / li</h3></div><p class="desc"><span class="field-label desc-label">설명</span>목록(리스트)을 만든다. 순서가 중요하지 않은 항목들을 나열할 때 사용한다. 순서가 중요하면 ol을 사용한다.</p><pre class="code"><code>&lt;<span class="tag">ul</span>&gt;
+  &lt;<span class="tag">li</span>&gt;사과&lt;/<span class="tag">li</span>&gt;
+  &lt;<span class="tag">li</span>&gt;바나나&lt;/<span class="tag">li</span>&gt;
+  &lt;<span class="tag">li</span>&gt;포도&lt;/<span class="tag">li</span>&gt;
+&lt;/<span class="tag">ul</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>사과 앞에 불릿(•) 기호가 붙은 목록이 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">ol</span><span class="rel-tag">table</span><span class="rel-tag">list-style (CSS)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">div</h3></div><p class="desc"><span class="field-label desc-label">설명</span>가장 많이 사용하는 태그. 박스를 만든다고 생각하면 된다. 특정 영역을 그룹으로 묶어서 레이아웃을 구성하거나 CSS/JS로 스타일·동작을 적용할 때 사용한다. 그 자체로는 의미가 없는 범용 컨테이너다.</p><pre class="code"><code>&lt;<span class="tag">div</span>&gt;
+  내용
+&lt;/<span class="tag">div</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>기본 스타일이 없어 시각적 변화는 없지만 안의 요소들이 하나의 블록으로 묶임</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">span</span><span class="rel-tag">class</span><span class="rel-tag">Flexbox</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">span</h3></div><p class="desc"><span class="field-label desc-label">설명</span>글자 일부만 꾸밀 때 사용한다. 문장 중 일부분만 스타일을 다르게 주고 싶을 때 사용한다. div와 달리 줄바꿈 없이 텍스트 흐름 안에 붙는다.</p><pre class="code"><code>&lt;<span class="tag">p</span>&gt;
+  안녕 &lt;<span class="tag">span</span>&gt;빨간색&lt;/<span class="tag">span</span>&gt;
+&lt;/<span class="tag">p</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>인라인으로 배치되어 앞뒤 텍스트와 한 줄에 이어서 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">div</span><span class="rel-tag">class</span><span class="rel-tag">inline vs block</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="html-advanced">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">◆</span>html-심화</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">02</span>HTML 태그 더 알아보기</div>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">주석 &lt;!-- --&gt;</h3></div><p class="desc"><span class="field-label desc-label">설명</span>코드에 설명을 적을 때 사용한다. 브라우저에는 보이지 않는다. 코드에 설명을 남기거나, 특정 코드를 잠시 비활성화(주석 처리)하고 싶을 때 사용한다. 화면에는 출력되지 않는다.</p><p class="desc">활용 예: 코드 설명 · 잠시 코드 비활성화 · 다른 개발자에게 설명</p><pre class="code"><code><span class="cm">&lt;!-- 이것은 주석입니다 --&gt;</span></code></pre><div class="result"><span class="field-label">결과</span><pre>브라우저 화면에는 아무것도 표시되지 않음 (개발자 도구의 소스에서만 확인 가능)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">CSS 주석 /* */</span><span class="rel-tag">JS 주석 //</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">class vs id</h3></div><p class="desc"><span class="field-label desc-label">설명</span>class : 여러 개의 태그에 함께 사용할 수 있다. 같은 디자인을 여러 곳에 줄 때 쓴다. id : 한 페이지에서 하나만 사용하는 것이 원칙이다. 특정 요소 하나를 지정하거나 JavaScript에서 많이 사용한다. 여러 요소에 같은 스타일·동작을 주고 싶으면 class, 페이지에서 단 하나뿐인 요소를 특정하고 싶으면 id를 사용한다.</p><pre class="code"><code>&lt;<span class="tag">p</span> class=<span class="str">"text"</span>&gt;안녕&lt;/<span class="tag">p</span>&gt;
+&lt;<span class="tag">p</span> class=<span class="str">"text"</span>&gt;반갑습니다&lt;/<span class="tag">p</span>&gt;
+
+&lt;<span class="tag">h1</span> id=<span class="str">"title"</span>&gt;제목&lt;/<span class="tag">h1</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>class는 같은 이름을 가진 모든 요소에, id는 문서 내 유일한 요소 하나에만 적용됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">CSS 클래스 선택자</span><span class="rel-tag">getElementById</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">버튼 종류</h3></div><p class="desc"><span class="field-label desc-label">설명</span>submit은 폼을 전송, reset은 입력값을 초기화한다. 폼 제출용 버튼(submit), 폼 초기화 버튼(reset), 단순 클릭 이벤트용 버튼(button)을 구분해서 써야 할 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">button</span>&gt;일반 버튼&lt;/<span class="tag">button</span>&gt;
+&lt;<span class="tag">button</span> type=<span class="str">"submit"</span>&gt;전송&lt;/<span class="tag">button</span>&gt;
+&lt;<span class="tag">button</span> type=<span class="str">"reset"</span>&gt;초기화&lt;/<span class="tag">button</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>type에 따라 클릭 시 폼이 제출되거나, 초기화되거나, 아무 기본 동작 없이 JS 이벤트만 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">form</span><span class="rel-tag">onclick</span><span class="rel-tag">submit 이벤트</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">placeholder</h3></div><p class="desc"><span class="field-label desc-label">설명</span>입력창에 안내 문구를 넣는다. 입력창에 무엇을 입력해야 하는지 예시·안내 문구를 회색 글씨로 미리 보여주고 싶을 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">input</span> type=<span class="str">"text"</span> placeholder=<span class="str">"이름을 입력하세요"</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>입력창이 비어 있을 때만 회색 안내 문구가 보이고, 값을 입력하면 사라짐</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">input</span><span class="rel-tag">label</span><span class="rel-tag">value</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">textarea</h3></div><p class="desc"><span class="field-label desc-label">설명</span>긴 글을 입력받는다. 여러 줄에 걸친 긴 텍스트(후기, 게시글 본문 등)를 입력받아야 할 때 사용한다.</p><p class="desc">활용 예: 문의하기 · 건의사항 · 후기</p><pre class="code"><code>&lt;<span class="tag">textarea</span>&gt;&lt;/<span class="tag">textarea</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>크기 조절이 가능한 여러 줄 입력 박스가 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">input</span><span class="rel-tag">form</span><span class="rel-tag">rows/cols 속성</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">iframe</h3></div><p class="desc"><span class="field-label desc-label">설명</span>다른 사이트를 페이지 안에 가져온다. 다른 웹페이지나 유튜브 영상 등 외부 콘텐츠를 현재 페이지 안에 그대로 삽입해야 할 때 사용한다.</p><p class="desc">활용 예: 유튜브 영상 · 지도</p><pre class="code"><code>&lt;<span class="tag">iframe</span> src=<span class="str">"https://www.youtube.com/embed/영상ID"</span>&gt;&lt;/<span class="tag">iframe</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 src 주소의 페이지가 사각형 영역 안에 그대로 렌더링됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">embed</span><span class="rel-tag">video</span><span class="rel-tag">CORS(외부 삽입 제한)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">form (실전)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>사용자가 입력한 데이터를 서버로 보낼 때 사용한다. 기본형은 input과 button만 있으면 되지만, 실제로는 action(보낼 주소)과 method(GET/POST)를 함께 지정하고, 각 input에 name을 붙여서 사용한다.</p><pre class="code"><code>&lt;<span class="tag">form</span> action=<span class="str">"/login"</span> method=<span class="str">"POST"</span>&gt;
+
+  &lt;<span class="tag">label</span>&gt;아이디&lt;/<span class="tag">label</span>&gt;
+  &lt;<span class="tag">input</span>
+    type=<span class="str">"text"</span>
+    name=<span class="str">"username"</span>
+    placeholder=<span class="str">"아이디"</span>&gt;
+
+  &lt;<span class="tag">br</span>&gt;&lt;<span class="tag">br</span>&gt;
+
+  &lt;<span class="tag">label</span>&gt;비밀번호&lt;/<span class="tag">label</span>&gt;
+  &lt;<span class="tag">input</span>
+    type=<span class="str">"password"</span>
+    name=<span class="str">"password"</span>
+    placeholder=<span class="str">"비밀번호"</span>&gt;
+
+  &lt;<span class="tag">br</span>&gt;&lt;<span class="tag">br</span>&gt;
+
+  &lt;<span class="tag">button</span> type=<span class="str">"submit"</span>&gt;로그인&lt;/<span class="tag">button</span>&gt;
+
+&lt;/<span class="tag">form</span>&gt;</code></pre><p class="desc">여기서 <b>name</b>이 꼭 필요한 이유: name이 있어야 서버가 "이 값이 어떤 항목인지" 구분할 수 있다. name이 없으면 값은 입력해도 서버로 아예 전달되지 않는다. 위 form을 submit하면 action="/login" 주소로, name을 key로 삼아 아래처럼 데이터가 서버로 전송된다.</p><pre class="code"><code>username=abc
+password=1234</code></pre><div class="result"><span class="field-label">결과</span><pre>submit 시 action 주소(/login)로 method(POST) 방식에 맞춰, name=값 형태로 묶인 데이터가 서버로 전송됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">name 속성</span><span class="rel-tag">req.body (Express)</span><span class="rel-tag">method="POST"</span></p><p class="tip"><span class="field-label tip-label">주의</span> name이 없는 input은 form을 제출해도 값이 서버로 전달되지 않는다. Express에서 req.body로 값을 꺼내려면 반드시 name 속성이 있어야 한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">label</h3></div><p class="desc"><span class="field-label desc-label">설명</span>입력창의 이름을 표시한다. input과 설명 텍스트를 명확히 연결해서 접근성을 높이고, 텍스트를 클릭해도 입력창이 선택되게 하고 싶을 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">label</span>&gt;아이디&lt;/<span class="tag">label</span>&gt;
+&lt;<span class="tag">input</span> type=<span class="str">"text"</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>label 텍스트를 클릭하면 연결된 input에 포커스가 이동함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">input</span><span class="rel-tag">for 속성</span><span class="rel-tag">접근성(a11y)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">select / option</h3></div><p class="desc"><span class="field-label desc-label">설명</span>여러 개 중 하나를 선택한다. option은 select 안의 선택 항목이다. 여러 선택지 중 하나(또는 여러 개)를 드롭다운 형태로 고르게 하고 싶을 때 사용한다.</p><p class="desc">활용 예: 성별 · 지역 · 나라</p><pre class="code"><code>&lt;<span class="tag">select</span>&gt;
+  &lt;<span class="tag">option</span>&gt;사과&lt;/<span class="tag">option</span>&gt;
+  &lt;<span class="tag">option</span>&gt;바나나&lt;/<span class="tag">option</span>&gt;
+  &lt;<span class="tag">option</span>&gt;포도&lt;/<span class="tag">option</span>&gt;
+&lt;/<span class="tag">select</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>클릭하면 option 목록이 드롭다운으로 펼쳐지고 선택한 값이 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">input type="radio"</span><span class="rel-tag">.value (JS)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">audio</h3></div><p class="desc"><span class="field-label desc-label">설명</span>음악을 재생한다. 페이지에 배경음악이나 효과음 등 오디오 파일을 재생해야 할 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">audio</span> controls&gt;
+  &lt;<span class="tag">source</span> src=<span class="str">"music.mp3"</span>&gt;
+&lt;/<span class="tag">audio</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>재생/일시정지/볼륨 컨트롤이 있는 오디오 플레이어가 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">video</span><span class="rel-tag">autoplay 속성</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">video</h3></div><p class="desc"><span class="field-label desc-label">설명</span>동영상을 재생한다. 페이지에 동영상을 직접 재생해야 할 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">video</span> width=<span class="str">"<span class="num">500</span>"</span> controls&gt;
+  &lt;<span class="tag">source</span> src=<span class="str">"movie.mp4"</span>&gt;
+&lt;/<span class="tag">video</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>재생 컨트롤이 있는 동영상 플레이어가 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">audio</span><span class="rel-tag">iframe(유튜브 임베드)</span><span class="rel-tag">controls 속성</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">table (tr / td / th)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>표를 만든다. tr = 행(Row), td = 칸(Data), th = 제목칸(Header) 표 형태로 정리된 데이터(가격표, 시간표 등)를 보여줘야 할 때 사용한다. 레이아웃 목적으로는 사용하지 않는 것이 좋다.</p><pre class="code"><code>&lt;<span class="tag">table</span> border=<span class="str">"<span class="num">1</span>"</span>&gt;
+  &lt;<span class="tag">tr</span>&gt;
+    &lt;<span class="tag">th</span>&gt;이름&lt;/<span class="tag">th</span>&gt;
+    &lt;<span class="tag">th</span>&gt;나이&lt;/<span class="tag">th</span>&gt;
+  &lt;/<span class="tag">tr</span>&gt;
+  &lt;<span class="tag">tr</span>&gt;
+    &lt;<span class="tag">td</span>&gt;철수&lt;/<span class="tag">td</span>&gt;
+    &lt;<span class="tag">td</span>&gt;<span class="num">20</span>&lt;/<span class="tag">td</span>&gt;
+  &lt;/<span class="tag">tr</span>&gt;
+&lt;/<span class="tag">table</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>행(tr)과 열(td/th)로 구성된 격자형 표가 렌더링됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">th(제목 셀)</span><span class="rel-tag">CSS Grid(레이아웃 대안)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">favicon</h3></div><p class="desc"><span class="field-label desc-label">설명</span>브라우저 탭에 표시되는 아이콘이다. 브라우저 탭이나 즐겨찾기에 표시될 작은 아이콘을 지정하고 싶을 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">link</span> rel=<span class="str">"icon"</span> href=<span class="str">"logo.png"</span>&gt;</code></pre><div class="result"><span class="field-label">결과</span><pre>브라우저 탭 제목 옆에 지정한 아이콘 이미지가 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">link rel="icon"</span><span class="rel-tag">head</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="css-basic">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">❖</span>css-기본</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">03</span>CSS 기본</div>
+<p class="intro">HTML을 꾸며주는 언어. 선택자로 대상을 고르고, 속성으로 스타일을 지정한다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">태그 선택자</h3></div><p class="desc"><span class="field-label desc-label">설명</span>태그 이름으로 바로 선택한다. 특정 태그 전체(예: 모든 p, 모든 h1)에 동일한 스타일을 한 번에 적용하고 싶을 때 사용한다.</p><pre class="code"><code>h1 {
+  <span class="prop">color</span>: red;
+}
+p {
+  <span class="prop">color</span>: blue;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>해당 태그를 쓴 모든 요소에 스타일이 일괄 적용됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">클래스 선택자</span><span class="rel-tag">id 선택자</span><span class="rel-tag">우선순위(specificity)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">클래스 선택자 (.)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>class 속성으로 지정한 요소를 선택한다. 여러 요소에 재사용 가능한 스타일을 적용하고 싶을 때 사용한다. 가장 많이 쓰이는 선택자다.</p><pre class="code"><code>&lt;<span class="tag">p</span> class=<span class="str">"text"</span>&gt;
+
+.text {
+  <span class="prop">color</span>: red;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>class="이름"을 가진 모든 요소에 스타일이 적용됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">id 선택자</span><span class="rel-tag">HTML class 속성</span><span class="rel-tag">BEM 네이밍</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">id 선택자 (#)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>id 속성으로 지정한 요소 하나를 선택한다. 페이지에서 단 하나뿐인 특정 요소에만 스타일을 적용하고 싶을 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">p</span> id=<span class="str">"hello"</span>&gt;
+
+#hello {
+  <span class="prop">color</span>: green;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>해당 id를 가진 요소 하나에만 스타일이 적용됨 (id는 문서 내 중복 금지)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">클래스 선택자</span><span class="rel-tag">getElementById</span><span class="rel-tag">우선순위</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">글자색 color</h3></div><p class="desc"><span class="field-label desc-label">설명</span>색 이름, 16진수, rgb() 등 다양한 방식으로 지정할 수 있다. 텍스트 색상을 바꿔야 할 때 사용한다.</p><pre class="code"><code><span class="prop">color</span>: red;
+<span class="prop">color</span>: white;
+<span class="prop">color</span>: #00ff00;
+<span class="prop">color</span>: rgb(<span class="num">255</span>, <span class="num">0</span>, <span class="num">0</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>텍스트 색이 지정한 색상 값으로 바뀜</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">background-color</span><span class="rel-tag">opacity</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">배경색 / 글자 크기 / 굵게 / 가운데 정렬</h3></div><p class="desc"><span class="field-label desc-label">설명</span>기본적인 텍스트 꾸미기(배경, 크기, 굵기, 정렬)를 한 번에 적용할 때 사용한다.</p><pre class="code"><code><span class="prop">background-color</span>: red;
+<span class="prop">font-size</span>: <span class="num">40px</span>;
+<span class="prop">font-weight</span>: bold;
+<span class="prop">text-align</span>: center;</code></pre><div class="result"><span class="field-label">결과</span><pre>배경색이 채워지고 글자 크기·굵기가 바뀌며 텍스트가 가운데로 정렬됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">font-weight</span><span class="rel-tag">text-align</span><span class="rel-tag">background-color</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">테두리 / 둥글게</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요소에 테두리를 그리거나 모서리를 둥글게 만들고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">border</span>: <span class="num">2px</span> solid white;
+<span class="prop">border-radius</span>: <span class="num">10px</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 두께·색의 테두리가 그려지고 모서리가 둥글게 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">box-shadow</span><span class="rel-tag">outline</span><span class="rel-tag">border-radius</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">여백 (padding / margin)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>padding은 안쪽 여백, margin은 바깥쪽 여백이다. 요소 안쪽 여백(padding)이나 바깥 여백(margin)을 조절해서 간격을 맞추고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">padding</span>: <span class="num">20px</span>;
+<span class="prop">margin</span>: <span class="num">20px</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>padding은 테두리 안쪽 공간이, margin은 다른 요소와의 바깥 간격이 늘어남</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">box-sizing</span><span class="rel-tag">박스 모델(Box Model)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">너비 / 높이</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요소의 가로·세로 크기를 직접 지정하고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">width</span>: <span class="num">300px</span>;
+<span class="prop">height</span>: <span class="num">300px</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 width, height 값만큼 요소 크기가 고정됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">max-width</span><span class="rel-tag">box-sizing</span><span class="rel-tag">object-fit</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">마우스를 올렸을 때 :hover</h3></div><p class="desc"><span class="field-label desc-label">설명</span>버튼이나 링크에 마우스를 올렸을 때만 스타일 변화를 주고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">button</span>:hover {
+  <span class="prop">background</span>: red;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>마우스가 요소 위에 있는 동안에만 지정한 스타일이 적용되고, 벗어나면 원래대로 돌아옴</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">transition</span><span class="rel-tag">cursor</span><span class="rel-tag">:active</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">font-family</h3></div><p class="desc"><span class="field-label desc-label">설명</span>사이트 전체 글씨체를 바꿀 때 사용한다. 텍스트에 사용할 서체(폰트)를 지정하고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">font-family</span>: Arial;</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 순서대로 폰트를 찾아 적용하고, 없으면 다음 폰트로 대체됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">Google Fonts</span><span class="rel-tag">font-weight</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="css-advanced">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">❖</span>css-심화</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">04</span>CSS 심화</div>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">배경 이미지</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요소의 배경에 색 대신 이미지를 깔고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">background-image</span>: url(<span class="str">"img.png"</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 이미지가 요소의 배경으로 채워짐</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">background-size</span><span class="rel-tag">background-position</span><span class="rel-tag">object-fit</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">그림자 (box-shadow / text-shadow)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>box-shadow는 박스에, text-shadow는 글자에 그림자를 넣는다. 요소나 텍스트에 입체감을 주기 위해 그림자를 넣고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">box-shadow</span>: <span class="num">0px</span> <span class="num">0px</span> <span class="num">10px</span> black;
+<span class="prop">text-shadow</span>: <span class="num">2px</span> <span class="num">2px</span> <span class="num">5px</span> black;</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 방향·흐림 정도로 그림자가 렌더링됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">border-radius</span><span class="rel-tag">opacity</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">마우스 모양 cursor</h3></div><p class="desc"><span class="field-label desc-label">설명</span>버튼처럼 클릭 가능한 느낌을 준다. 특정 요소 위에서 마우스 포인터 모양(손가락, 십자 등)을 바꿔서 클릭 가능함을 알려주고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">cursor</span>: pointer;</code></pre><div class="result"><span class="field-label">결과</span><pre>요소 위에 마우스를 올리면 지정한 커서 모양으로 바뀜</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">:hover</span><span class="rel-tag">pointer-events</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">투명도 opacity</h3></div><p class="desc"><span class="field-label desc-label">설명</span>0이면 안 보이고, 1이면 완전히 보인다. 요소를 완전히 숨기지 않고 반투명하게 만들고 싶을 때 사용한다 (예: 비활성화된 버튼).</p><pre class="code"><code><span class="prop">opacity</span>: <span class="num">0.5</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>0에 가까울수록 투명해지고 1이면 완전히 불투명함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">visibility</span><span class="rel-tag">display</span><span class="rel-tag">rgba 색상</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">display</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요소가 어떻게 배치될지 결정한다. block : 한 줄을 전부 차지한다. (div, p, h1) inline : 글자처럼 이어진다. (span, a) flex : 요소를 가로/세로로 쉽게 정렬한다. 실무에서 가장 많이 사용한다. 요소를 어떤 방식으로 배치할지(한 줄 전체 차지, 옆으로 나열, 숨김 등) 결정할 때 사용한다.</p><pre class="code"><code><span class="prop">display</span>: block;
+<span class="prop">display</span>: inline;
+<span class="prop">display</span>: flex;
+<span class="prop">display</span>: none;</code></pre><div class="result"><span class="field-label">결과</span><pre>block은 줄바꿈되며 전체 폭 차지, inline은 옆으로 붙음, none은 화면에서 사라짐</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">Flexbox</span><span class="rel-tag">visibility</span><span class="rel-tag">position</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Flexbox</h3></div><p class="desc"><span class="field-label desc-label">설명</span>가장 많이 사용하는 정렬 방법이다. justify-content는 가로 정렬, align-items는 세로 정렬이다. 요소들을 가로 또는 세로로 정렬하거나 균등하게 배치해야 할 때 사용한다. 가장 많이 쓰이는 레이아웃 방식이다.</p><pre class="code"><code><span class="prop">display</span>: flex;
+<span class="prop">justify-content</span>: center;
+<span class="prop">align-items</span>: center;</code></pre><div class="result"><span class="field-label">결과</span><pre>자식 요소들이 justify-content, align-items 값에 따라 정렬됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">display</span><span class="rel-tag">CSS Grid</span><span class="rel-tag">gap</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">transition</h3></div><p class="desc"><span class="field-label desc-label">설명</span>부드러운 애니메이션 효과를 만든다. 스타일 값이 갑자기 바뀌지 않고 부드럽게 변화하도록 애니메이션 효과를 주고 싶을 때 사용한다.</p><pre class="code"><code>button {
+  <span class="prop">transition</span>: <span class="num">0.3s</span>;
+}
+<span class="prop">button</span>:hover {
+  <span class="prop">background</span>: red;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 속성이 변할 때 지정한 시간 동안 부드럽게 변화함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">:hover</span><span class="rel-tag">transform</span><span class="rel-tag">animation</span></p><p class="tip"><span class="field-label tip-label">주의</span> hover 시 색이 부드럽게 바뀐다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">overflow</h3></div><p class="desc"><span class="field-label desc-label">설명</span>내용이 박스를 넘칠 때 어떻게 할지 정한다. 요소 안의 내용이 박스 크기보다 클 때 어떻게 처리할지(잘라내기, 스크롤 등) 정하고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">overflow</span>: hidden; /* 넘치는 부분 숨김 */
+<span class="prop">overflow</span>: auto;   /* 스크롤 생성 */</code></pre><div class="result"><span class="field-label">결과</span><pre>hidden은 넘치는 부분을 잘라내고, scroll/auto는 스크롤바가 생김</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">text-overflow</span><span class="rel-tag">white-space</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">position</h3></div><p class="desc"><span class="field-label desc-label">설명</span>relative는 기준 위치, absolute는 원하는 위치, fixed는 스크롤해도 따라다닌다. 요소를 문서 흐름과 무관하게 특정 위치에 고정하거나, 부모 기준으로 배치하고 싶을 때 사용한다.</p><p class="desc">활용 예: 맨 위로 가기 버튼 · 채팅 버튼</p><pre class="code"><code><span class="prop">position</span>: relative;
+<span class="prop">position</span>: absolute;
+<span class="prop">position</span>: fixed;</code></pre><div class="result"><span class="field-label">결과</span><pre>absolute/fixed는 top·left 좌표로 위치가 결정되고, relative는 기존 위치에서 상대적으로 이동함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">z-index</span><span class="rel-tag">top/left</span><span class="rel-tag">Flexbox</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">z-index</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요소가 겹칠 때 누가 위로 올라올지 결정한다. 숫자가 높을수록 위에 표시된다. 여러 요소가 겹칠 때 어떤 요소를 위로 보이게 할지 순서를 정하고 싶을 때 사용한다. position이 static이 아닌 요소에만 적용된다.</p><pre class="code"><code><span class="prop">z-index</span>: <span class="num">100</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>값이 클수록 다른 요소보다 위쪽(앞)에 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">position</span><span class="rel-tag">stacking context</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">이미지 원형으로 (border-radius)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>이미지에도 border-radius를 사용할 수 있다. 프로필 사진처럼 이미지를 원형으로 만들고 싶을 때 사용한다.</p><pre class="code"><code>img {
+  <span class="prop">border-radius</span>: <span class="num">50</span>%;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>border-radius를 50%로 주면 정사각형 이미지가 완전한 원으로 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">object-fit</span><span class="rel-tag">width/height</span></p><p class="tip"><span class="field-label tip-label">주의</span> 원형 프로필 사진을 만들 때 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">object-fit</h3></div><p class="desc"><span class="field-label desc-label">설명</span>사진이 찌그러지지 않게 비율을 유지해준다. img나 video의 원본 비율을 유지하면서 지정한 박스 크기에 맞춰 잘라내거나 채우고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">object-fit</span>: cover;</code></pre><div class="result"><span class="field-label">결과</span><pre>cover는 비율 유지하며 박스를 꽉 채우고 넘치는 부분은 잘림, contain은 전체가 보이도록 축소됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">width/height</span><span class="rel-tag">border-radius</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">배경 속성 모음</h3></div><p class="desc"><span class="field-label desc-label">설명</span>background-size는 배경 크기, background-repeat는 반복 여부, background-position은 위치를 정한다. 배경 이미지의 반복 여부, 위치, 크기를 세부적으로 조정하고 싶을 때 사용한다.</p><pre class="code"><code><span class="prop">background-size</span>: cover;      /* 화면을 꽉 채운다 */
+<span class="prop">background-repeat</span>: no-repeat;
+<span class="prop">background-position</span>: center;</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 옵션에 따라 배경 이미지가 반복되지 않거나, 특정 위치에 고정되거나, 박스에 맞게 조정됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">배경 이미지</span><span class="rel-tag">object-fit</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">transform</h3></div><p class="desc"><span class="field-label desc-label">설명</span>크기, 회전 등을 변경한다. 요소를 이동·회전·확대/축소 하고 싶을 때 사용한다. 레이아웃에 영향을 주지 않아 애니메이션에 적합하다.</p><pre class="code"><code><span class="prop">transform</span>: scale(<span class="num">1.2</span>);   /* <span class="num">120</span>% 확대 */
+<span class="prop">transform</span>: rotate(<span class="num">45deg</span>); /* 45도 회전 */</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 값만큼 요소가 이동, 회전, 또는 크기 변화하며 렌더링됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">transition</span><span class="rel-tag">animation</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">animation / @keyframes</h3></div><p class="desc"><span class="field-label desc-label">설명</span>움직이는 효과를 만든다. hover 같은 이벤트 없이도 반복되거나 자동으로 재생되는 애니메이션(로딩 스피너 등)을 만들고 싶을 때 사용한다.</p><pre class="code"><code>div {
+  <span class="prop">animation</span>: move <span class="num">2s</span> infinite;
+}
+
+@keyframes move {
+  <span class="num">0</span>% { margin-left: <span class="num">0</span>; }
+  <span class="num">100</span>% { margin-left: <span class="num">200px</span>; }
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>@keyframes에 정의한 단계대로 요소 스타일이 시간에 따라 자동으로 변화함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">transition</span><span class="rel-tag">transform</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="js-basic">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▶</span>js-기본</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">05</span>JavaScript 기본</div>
+<p class="intro">웹페이지를 움직이게 만드는 언어.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">출력 console.log</h3></div><p class="desc"><span class="field-label desc-label">설명</span>변수 값이나 코드 실행 흐름을 확인하기 위해 개발자 도구에 출력하고 싶을 때 사용한다. 디버깅에 가장 많이 쓰인다.</p><pre class="code"><code>console.log(<span class="str">"안녕하세요"</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>브라우저 개발자 도구(콘솔) 탭에 값이 출력됨 — 화면에는 보이지 않음</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">alert</span><span class="rel-tag">디버깅</span><span class="rel-tag">개발자 도구</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">변수 let</h3></div><p class="desc"><span class="field-label desc-label">설명</span>나중에 값이 바뀔 수 있는 데이터를 저장할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> name = <span class="str">"사과"</span>;
+<span class="kw">let</span> age = <span class="num">20</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>선언한 변수에 값이 저장되고, 이후 다른 값으로 재할당 가능</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">const</span><span class="rel-tag">var(구식 방식)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">더하기</h3></div><p class="desc"><span class="field-label desc-label">설명</span>숫자를 계산하거나 문자열을 이어 붙일 때 사용한다. 문자열과 숫자를 +로 연결하면 문자열로 합쳐진다.</p><pre class="code"><code><span class="kw">let</span> a = <span class="num">5</span>;
+<span class="kw">let</span> b = <span class="num">10</span>;
+console.log(a + b); // 결과: <span class="num">15</span></code></pre><div class="result"><span class="field-label">결과</span><pre>숫자끼리는 덧셈 결과, 문자열이 섞이면 이어붙인 문자열이 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">형 변환</span><span class="rel-tag">템플릿 리터럴</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">if / else</h3></div><p class="desc"><span class="field-label desc-label">설명</span>조건에 따라 다른 코드를 실행해야 할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> age = <span class="num">20</span>;
+
+<span class="kw">if</span> (age &gt;= <span class="num">19</span>) {
+  console.log(<span class="str">"성인"</span>);
+} <span class="kw">else</span> {
+  console.log(<span class="str">"미성년자"</span>);
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>조건식이 참이면 if 블록, 거짓이면 else 블록의 코드가 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">비교 연산자</span><span class="rel-tag">switch</span><span class="rel-tag">삼항 연산자</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">반복문 for</h3></div><p class="desc"><span class="field-label desc-label">설명</span>정해진 횟수만큼, 또는 배열의 모든 요소를 순회하며 같은 작업을 반복해야 할 때 사용한다.</p><pre class="code"><code><span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">1</span>; i &lt;= <span class="num">5</span>; i++) {
+  console.log(i);
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>조건을 만족하는 동안 블록 안의 코드가 반복 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">while</span><span class="rel-tag">배열 다루기</span><span class="rel-tag">forEach</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">함수 function</h3></div><p class="desc"><span class="field-label desc-label">설명</span>반복해서 실행할 코드 블록을 이름 붙여 재사용하고 싶을 때 사용한다.</p><pre class="code"><code><span class="kw">function</span> hello() {
+  alert(<span class="str">"안녕하세요"</span>);
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>함수를 호출(실행)할 때만 내부 코드가 실행되고 결과가 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">화살표 함수</span><span class="rel-tag">매개변수</span><span class="rel-tag">return</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">버튼 클릭 연결 (onclick)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>버튼을 클릭했을 때 특정 동작(함수 실행)을 연결하고 싶을 때 사용한다.</p><pre class="code"><code>&lt;<span class="tag">button</span> onclick=<span class="str">"hello()"</span>&gt;눌러보세요&lt;/<span class="tag">button</span>&gt;
+
+<span class="kw">function</span> hello() {
+  alert(<span class="str">"버튼을 눌렀습니다."</span>);
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>버튼을 클릭하면 지정한 함수가 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">addEventListener</span><span class="rel-tag">함수 function</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">클립보드 복사</h3></div><p class="desc"><span class="field-label desc-label">설명</span>버튼 클릭으로 특정 텍스트를 사용자의 클립보드에 복사해주고 싶을 때 사용한다 (예: 링크 공유 버튼).</p><pre class="code"><code>&lt;<span class="tag">button</span> onclick=<span class="str">"copyIP()"</span>&gt;링크 복사&lt;/<span class="tag">button</span>&gt;
+
+<span class="kw">function</span> copyIP() {
+  navigator.clipboard.writeText(<span class="str">"https://example.com"</span>);
+  alert(<span class="str">"복사되었습니다!"</span>);
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>클릭 시 텍스트가 클립보드에 저장되고, 다른 곳에 Ctrl+V로 붙여넣기 가능해짐</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">navigator.clipboard</span><span class="rel-tag">HTTPS(보안 컨텍스트 필요)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">const</h3></div><p class="desc"><span class="field-label desc-label">설명</span>변하지 않는 값을 저장한다. 한 번 정해지면 값이 절대 바뀌지 않는 데이터(설정값, 상수 등)를 저장할 때 사용한다.</p><pre class="code"><code><span class="kw">const</span> PI = <span class="num">3.14</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>재할당을 시도하면 오류(TypeError)가 발생함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">let</span><span class="rel-tag">불변성(immutability)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">배열 (Array)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>여러 값을 저장한다. 여러 개의 값을 순서대로 하나의 변수에 모아서 관리하고 싶을 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> fruits = [<span class="str">"사과"</span>, <span class="str">"바나나"</span>, <span class="str">"포도"</span>];</code></pre><div class="result"><span class="field-label">결과</span><pre>인덱스(0부터 시작)로 각 값에 접근 가능한 목록이 생성됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">배열 다루기(push, map 등)</span><span class="rel-tag">객체(Object)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">객체 (Object)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>관련된 정보를 하나로 묶는다. 이름(key)과 값(value)의 쌍으로 관련된 데이터를 하나로 묶어 관리하고 싶을 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> user = {
+  <span class="prop">name</span>: <span class="str">"철수"</span>,
+  <span class="prop">age</span>: <span class="num">20</span>
+};</code></pre><div class="result"><span class="field-label">결과</span><pre>점(.) 또는 대괄호([])로 각 속성 값에 접근 가능한 데이터 묶음이 생성됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">배열(Array)</span><span class="rel-tag">JSON</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="js-advanced">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▶</span>js-심화</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">06</span>JavaScript 심화 (DOM &amp; 기타)</div>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">document.getElementById()</h3></div><p class="desc"><span class="field-label desc-label">설명</span>HTML 요소를 선택한다. HTML의 특정 id를 가진 요소를 JS 코드에서 찾아 조작하고 싶을 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> title = document.getElementById(<span class="str">"title"</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>해당 id를 가진 DOM 요소 객체가 반환됨 (없으면 null)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">querySelector</span><span class="rel-tag">class vs id</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">내용 변경 innerHTML</h3></div><p class="desc"><span class="field-label desc-label">설명</span>웹페이지의 내용을 바꾼다. 요소 안의 내용(텍스트나 태그 구조)을 통째로 바꾸고 싶을 때 사용한다.</p><pre class="code"><code>document.getElementById(<span class="str">"title"</span>).innerHTML = <span class="str">"안녕하세요"</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>요소 내부가 지정한 HTML 문자열로 즉시 교체되어 화면에 반영됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">.value</span><span class="rel-tag">textContent</span><span class="rel-tag">XSS 주의</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">스타일 변경 .style</h3></div><p class="desc"><span class="field-label desc-label">설명</span>JS 코드로 요소의 CSS 속성을 동적으로 바꾸고 싶을 때 사용한다 (예: 다크모드 토글).</p><pre class="code"><code>document.getElementById(<span class="str">"title"</span>).style.color = <span class="str">"red"</span>;
+document.getElementById(<span class="str">"title"</span>).style.fontSize = <span class="str">"<span class="num">50px</span>"</span>;
+document.getElementById(<span class="str">"title"</span>).style.display = <span class="str">"none"</span>; // 숨기기
+document.getElementById(<span class="str">"title"</span>).style.display = <span class="str">"block"</span>; // 보이기</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 CSS 속성이 즉시 인라인 스타일로 적용되어 화면에 반영됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">classList.toggle</span><span class="rel-tag">CSS 클래스</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">값 가져오기 .value</h3></div><p class="desc"><span class="field-label desc-label">설명</span>입력창의 값을 가져온다. input이나 textarea에 사용자가 입력한 값을 JS에서 읽어와야 할 때 사용한다. HTML만으로는 입력값을 활용할 수 없고, 반드시 .value로 JS에 가져와야 응용이 가능하다. 실무에서도 로그인, 검색, 댓글 작성 등 입력값을 다루는 거의 모든 곳에서 사용한다.</p><pre class="code"><code>&lt;<span class="tag">input</span> id=<span class="str">"name"</span>&gt;
+
+&lt;<span class="tag">button</span> onclick=<span class="str">"hello()"</span>&gt;
+확인
+&lt;/<span class="tag">button</span>&gt;</code></pre><pre class="code"><code><span class="kw">function</span> hello(){
+
+    <span class="kw">const</span> name =
+    document.getElementById(<span class="str">"name"</span>).value;
+
+    alert(name);
+
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>입력창에 값을 쓰고 버튼을 누르면, 그 순간 입력창에 들어있던 문자열이 alert 창에 그대로 표시됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">input</span><span class="rel-tag">getElementById</span><span class="rel-tag">form 제출</span></p><p class="tip"><span class="field-label tip-label">주의</span> .value는 항상 문자열(string)로 반환되므로, 숫자로 계산하려면 Number()로 변환해야 한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">classList</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요소에 클래스를 추가·제거·토글해서 CSS 스타일을 바꾼다. 초보자가 가장 많이 쓰는 DOM 조작 기능 중 하나로, 색상·표시 여부 같은 스타일을 JS로 직접 하나하나 바꾸는 대신 미리 만들어둔 CSS 클래스를 붙였다 뗐다 하는 방식이다.</p><pre class="code"><code>&lt;<span class="tag">div</span> id=<span class="str">"box"</span>&gt;
+안녕하세요
+&lt;/<span class="tag">div</span>&gt;
+
+&lt;<span class="tag">button</span> onclick=<span class="str">"change()"</span>&gt;
+변경
+&lt;/<span class="tag">button</span>&gt;</code></pre><pre class="code"><code><span class="kw">function</span> change(){
+
+    document
+    .getElementById(<span class="str">"box"</span>)
+    .classList.add(<span class="str">"red"</span>);
+
+}</code></pre><pre class="code"><code>.red{
+
+    <span class="prop">color</span>:red;
+
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>버튼을 누르면 box 요소에 class="red"가 추가되어, 미리 정의해둔 CSS(.red { color:red; }) 스타일이 즉시 적용됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">classList.toggle</span><span class="rel-tag">classList.remove</span><span class="rel-tag">.style (인라인 방식)</span></p><p class="tip"><span class="field-label tip-label">주의</span> .style은 스타일을 하나씩 직접 바꾸지만, classList는 미리 만들어둔 CSS 클래스 전체를 한 번에 적용한다는 점이 다르다. 여러 스타일을 함께 바꿀 땐 classList가 더 깔끔하다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">랜덤 숫자</h3></div><p class="desc"><span class="field-label desc-label">설명</span>1~10 사이의 숫자를 만든다. 게임이나 추첨에 많이 사용한다. 추첨, 랜덤 이미지 변경 등 무작위 값이 필요할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> random = Math.floor(Math.random() * <span class="num">10</span>) + <span class="num">1</span>;</code></pre><div class="result"><span class="field-label">결과</span><pre>0 이상 1 미만의 소수가 생성되며, 원하는 범위로 가공해서 사용</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">Math 객체</span><span class="rel-tag">배열 다루기(랜덤 선택)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">setTimeout</h3></div><p class="desc"><span class="field-label desc-label">설명</span>일정 시간이 지난 후 한 번 실행한다. 일정 시간 뒤에 코드를 한 번만 실행하고 싶을 때 사용한다 (예: 알림 자동 닫기).</p><pre class="code"><code>setTimeout(<span class="kw">function</span> () {
+  alert(<span class="str">"3초 지남"</span>);
+}, <span class="num">3000</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 밀리초(ms)가 지난 후 콜백 함수가 한 번 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">setInterval</span><span class="rel-tag">clearTimeout</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">setInterval</h3></div><p class="desc"><span class="field-label desc-label">설명</span>일정 시간마다 반복 실행한다. 코드를 일정 시간 간격으로 반복 실행하고 싶을 때 사용한다 (예: 실시간 시계).</p><pre class="code"><code>setInterval(<span class="kw">function</span> () {
+  console.log(<span class="str">"1초"</span>);
+}, <span class="num">1000</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 간격마다 콜백 함수가 계속 반복 실행됨 (clearInterval로 멈춰야 함)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">setTimeout</span><span class="rel-tag">clearInterval</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">alert / prompt / confirm</h3></div><p class="desc"><span class="field-label desc-label">설명</span>alert : 알림창을 띄운다. prompt : 입력창을 띄우고 값을 받는다. confirm : 예/아니오 창을 띄우고 true/false를 반환한다. 사용자에게 간단한 메시지를 보여주거나(alert), 입력을 받거나(prompt), 확인/취소를 물어봐야 할 때(confirm) 사용한다.</p><pre class="code"><code>alert(<span class="str">"안녕하세요"</span>);
+<span class="kw">let</span> name = prompt(<span class="str">"이름"</span>);
+<span class="kw">let</span> result = confirm(<span class="str">"삭제?"</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>브라우저 기본 팝업창이 뜨며, 사용자가 응답하기 전까지 코드 실행이 멈춤</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">console.log</span><span class="rel-tag">모달(커스텀 UI)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">typeof</h3></div><p class="desc"><span class="field-label desc-label">설명</span>자료형을 확인한다. 변수에 담긴 값이 어떤 자료형(문자열, 숫자 등)인지 확인하고 싶을 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> age = <span class="num">20</span>;
+console.log(<span class="kw">typeof</span> age); // 결과: number</code></pre><div class="result"><span class="field-label">결과</span><pre>"string", "number", "boolean" 등 자료형 이름이 문자열로 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">형 변환</span><span class="rel-tag">비교 연산자(===)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">비교 연산자</h3></div><p class="desc"><span class="field-label desc-label">설명</span>두 값이 같은지, 큰지, 작은지 비교해서 조건문에 사용하고 싶을 때 사용한다.</p><pre class="code"><code>==   equal
+===  값과 자료형까지 비교
+!=   같지 않음
+&gt;   &lt;   &gt;=   &lt;=</code></pre><div class="result"><span class="field-label">결과</span><pre>비교 결과가 true 또는 false로 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">if/else</span><span class="rel-tag">=== vs ==(타입까지 비교)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">논리 연산자</h3></div><p class="desc"><span class="field-label desc-label">설명</span>여러 조건을 동시에(AND) 또는 하나라도(OR) 만족하는지 확인하고 싶을 때 사용한다.</p><pre class="code"><code>&amp;&amp;  그리고
+||  또는
+!   반대</code></pre><div class="result"><span class="field-label">결과</span><pre>&amp;&amp;는 모두 참일 때만, ||는 하나라도 참이면 true가 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">if/else</span><span class="rel-tag">비교 연산자</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">switch</h3></div><p class="desc"><span class="field-label desc-label">설명</span>조건이 여러 개일 때 사용한다. 하나의 값에 대해 경우의 수가 많을 때 if/else보다 깔끔하게 분기 처리하고 싶을 때 사용한다.</p><pre class="code"><code><span class="kw">switch</span> (day) {
+  <span class="kw">case</span> <span class="num">1</span>:
+    console.log(<span class="str">"월요일"</span>);
+    <span class="kw">break</span>;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>case 값과 일치하는 블록이 실행되고, break가 없으면 다음 case까지 이어서 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">if/else</span><span class="rel-tag">break</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">while</h3></div><p class="desc"><span class="field-label desc-label">설명</span>조건이 맞는 동안 반복한다. 반복 횟수를 미리 알 수 없고, 조건이 참인 동안 계속 반복해야 할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> i = <span class="num">1</span>;
+<span class="kw">while</span> (i &lt;= <span class="num">5</span>) {
+  console.log(i);
+  i++;
+}</code></pre><div class="result"><span class="field-label">결과</span><pre>조건이 거짓이 될 때까지 블록 안의 코드가 반복 실행됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">for</span><span class="rel-tag">무한 루프 주의</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">배열 다루기</h3></div><p class="desc"><span class="field-label desc-label">설명</span>배열에 값을 추가/삭제하거나, 원하는 조건으로 필터링·변환해야 할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> fruits = [<span class="str">"사과"</span>, <span class="str">"포도"</span>];
+console.log(fruits.length); // 길이
+fruits.push(<span class="str">"바나나"</span>);        // 추가
+fruits.pop();                 // 삭제</code></pre><div class="result"><span class="field-label">결과</span><pre>사용한 메서드에 따라 배열 길이·순서·내용이 변경되거나 새 배열이 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">배열(Array)</span><span class="rel-tag">map/filter/reduce</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">문자열 다루기</h3></div><p class="desc"><span class="field-label desc-label">설명</span>문자열의 일부를 잘라내거나, 대소문자를 바꾸거나, 특정 단어를 찾아야 할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> text = <span class="str">"안녕"</span>;
+console.log(text.length);
+text.toLowerCase();
+text.toUpperCase();
+text.slice(<span class="num">0</span>, <span class="num">3</span>);</code></pre><div class="result"><span class="field-label">결과</span><pre>원본 문자열은 그대로 두고 처리된 새로운 문자열이 반환됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">배열 다루기</span><span class="rel-tag">템플릿 리터럴</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">형 변환</h3></div><p class="desc"><span class="field-label desc-label">설명</span>문자열로 받은 값을 숫자로 계산에 써야 하거나, 그 반대가 필요할 때 사용한다.</p><pre class="code"><code>Number(<span class="str">"<span class="num">10</span>"</span>);  // 문자 → 숫자
+String(<span class="num">10</span>);    // 숫자 → 문자</code></pre><div class="result"><span class="field-label">결과</span><pre>지정한 타입으로 값이 변환되어 반환됨 (변환 불가능하면 NaN)</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">typeof</span><span class="rel-tag">더하기(+ 연산자)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">날짜 Date</h3></div><p class="desc"><span class="field-label desc-label">설명</span>현재 시각을 표시하거나 날짜를 계산해야 할 때 사용한다.</p><pre class="code"><code><span class="kw">let</span> today = <span class="kw">new</span> Date();
+console.log(today);
+
+<span class="kw">let</span> now = <span class="kw">new</span> Date();
+console.log(now.getHours()); // 현재 시간(시)</code></pre><div class="result"><span class="field-label">결과</span><pre>연/월/일/시/분/초 정보를 담은 Date 객체가 생성됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">setInterval(실시간 시계)</span><span class="rel-tag">toLocaleDateString</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">fetch()</h3></div><p class="desc"><span class="field-label desc-label">설명</span>페이지를 새로고침하지 않고 브라우저(JS)에서 서버로 요청을 보내는 함수이다. Express 같은 백엔드를 배우면 로그인, 회원가입, 데이터 저장 등 거의 모든 곳에서 fetch로 서버와 통신하게 된다.</p><pre class="code"><code>fetch(<span class="str">"/login"</span>,{
+
+    method:<span class="str">"POST"</span>,
+
+    headers:{
+        <span class="str">"Content-Type"</span>:<span class="str">"application/json"</span>
+    },
+
+    body:JSON.stringify({
+
+        username:<span class="str">"abc"</span>,
+        password:<span class="str">"1234"</span>
+
+    })
+
+});</code></pre><p class="desc">이렇게 브라우저에서 보낸 요청은, Express 서버의 아래 코드가 받아서 처리한다. fetch의 body에 담아 보낸 값이 Express의 req.body에 그대로 들어온다.</p><pre class="code"><code>app.post(<span class="str">"/login"</span>,(req,res)=&gt;{
+
+    console.log(req.body);
+
+});</code></pre><div class="result"><span class="field-label">결과</span><pre>fetch가 보낸 { username: "abc", password: "1234" } 객체가 서버의 req.body에 그대로 도착해 console.log로 출력됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">req.body (Express)</span><span class="rel-tag">JSON.stringify</span><span class="rel-tag">async/await</span></p><p class="tip"><span class="field-label tip-label">주의</span> body에 객체를 그냥 넣으면 안 되고, 반드시 JSON.stringify()로 문자열로 변환해서 보내야 한다. 또한 headers의 Content-Type을 "application/json"으로 지정해야 서버가 JSON으로 올바르게 해석한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">HTTP 응답 (Response)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>서버가 클라이언트로 보내는 것이다. fetch 등으로 서버에 요청을 보낸 뒤, 돌아온 응답의 상태와 데이터를 처리해야 할 때 사용한다.</p><pre class="code"><code>res.send(<span class="str">"안녕하세요"</span>);
+res.sendFile(...);
+res.json(...);</code></pre><div class="result"><span class="field-label">결과</span><pre>status, headers, body(JSON 등)로 구성된 응답 객체를 받아 후속 처리 가능</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">fetch</span><span class="rel-tag">HTTP 메서드</span><span class="rel-tag">JSON</span></p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="examples">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">★</span>실전-예제</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">07</span>실전 예제 모음</div>
+<p class="intro">HTML + CSS + JavaScript를 함께 사용하는 미니 예제들.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">div 눌렀을 때 상호작용</h3></div><p class="desc"><span class="field-label desc-label">설명</span>(설명 없음)</p><pre class="code"><code>&lt;<span class="tag">div</span> class=<span class="str">"box"</span> onclick=<span class="str">"clickBox()"</span>&gt;
+  클릭해 보세요!
+&lt;/<span class="tag">div</span>&gt;
+
+.box {
+  <span class="prop">width</span>: <span class="num">200px</span>;
+  <span class="prop">padding</span>: <span class="num">20px</span>;
+  <span class="prop">cursor</span>: pointer;
+}
+
+<span class="kw">function</span> clickBox() {
+  alert(<span class="str">"클릭되었습니다!"</span>);
+}</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">사이트의 특정 위치로 이동하기</h3></div><p class="desc"><span class="field-label desc-label">설명</span>href="#introduce"는 id가 introduce인 곳으로 이동하라는 뜻이다.</p><pre class="code"><code>&lt;<span class="tag">a</span> href=<span class="str">"#introduce"</span>&gt;소개로 이동&lt;/<span class="tag">a</span>&gt;
+
+&lt;<span class="tag">h2</span> id=<span class="str">"introduce"</span>&gt;소개&lt;/<span class="tag">h2</span>&gt;
+
+html {
+  <span class="prop">scroll-behavior</span>: smooth;
+}</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">다크모드 버튼</h3></div><p class="desc"><span class="field-label desc-label">설명</span>(설명 없음)</p><pre class="code"><code>&lt;<span class="tag">button</span> onclick=<span class="str">"darkMode()"</span>&gt;다크모드&lt;/<span class="tag">button</span>&gt;
+
+<span class="kw">function</span> darkMode() {
+  document.body.classList.toggle(<span class="str">"dark"</span>);
+}
+
+.dark {
+  <span class="prop">background</span>: black;
+  <span class="prop">color</span>: white;
+}</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">비밀번호 보기</h3></div><p class="desc"><span class="field-label desc-label">설명</span>(설명 없음)</p><pre class="code"><code>&lt;<span class="tag">input</span> type=<span class="str">"password"</span> id=<span class="str">"pw"</span>&gt;
+&lt;<span class="tag">button</span> onclick=<span class="str">"showPw()"</span>&gt;보기&lt;/<span class="tag">button</span>&gt;
+
+<span class="kw">function</span> showPw() {
+  <span class="kw">let</span> pw = document.getElementById(<span class="str">"pw"</span>);
+  <span class="kw">if</span> (pw.type == <span class="str">"password"</span>) {
+    pw.type = <span class="str">"text"</span>;
+  } <span class="kw">else</span> {
+    pw.type = <span class="str">"password"</span>;
+  }
+}</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">메뉴 열기/닫기</h3></div><p class="desc"><span class="field-label desc-label">설명</span>버튼을 누를 때마다 메뉴가 열렸다가 닫힌다.</p><pre class="code"><code>&lt;<span class="tag">button</span> onclick=<span class="str">"openMenu()"</span>&gt;메뉴&lt;/<span class="tag">button</span>&gt;
+&lt;<span class="tag">div</span> id=<span class="str">"menu"</span>&gt;안녕하세요&lt;/<span class="tag">div</span>&gt;
+
+#menu {
+  <span class="prop">display</span>: none;
+}
+
+<span class="kw">function</span> openMenu() {
+  <span class="kw">let</span> menu = document.getElementById(<span class="str">"menu"</span>);
+  <span class="kw">if</span> (menu.style.display == <span class="str">"block"</span>) {
+    menu.style.display = <span class="str">"none"</span>;
+  } <span class="kw">else</span> {
+    menu.style.display = <span class="str">"block"</span>;
+  }
+}</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">이미지 변경</h3></div><p class="desc"><span class="field-label desc-label">설명</span>버튼을 누르면 사진이 다른 사진으로 바뀐다.</p><pre class="code"><code>&lt;<span class="tag">img</span> id=<span class="str">"photo"</span> src=<span class="str">"cat.png"</span>&gt;
+&lt;<span class="tag">button</span> onclick=<span class="str">"change()"</span>&gt;사진 변경&lt;/<span class="tag">button</span>&gt;
+
+<span class="kw">function</span> change() {
+  document.getElementById(<span class="str">"photo"</span>).src = <span class="str">"dog.png"</span>;
+}</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="express">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▣</span>express</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">08</span>Express</div>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Express란</h3></div><p class="desc"><span class="field-label desc-label">설명</span>node.js만으로도 서버를 만들 수 있지만 코드가 길고 복잡하다. 예를 들어 node.js만 사용하면 웹 서버를 만드는 데 수십 줄이 필요할 수도 있다. 그래서 나온 것이 Express이다. Express는 node.js에서 웹 서버를 쉽고 빠르게 만들 수 있게 도와주는 프레임워크다. 실무에서도 가장 많이 사용하는 node.js 프레임워크 중 하나다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="http">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▣</span>http-메서드</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">09</span>HTTP 메서드</div>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">GET</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 가져온다. URL에 데이터가 붙는다. 즐겨찾기가 가능하다. GET은 절대로 데이터를 변경하면 안 된다.</p><p class="desc">활용 예: 검색 · 게시글 조회</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">POST</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 보낸다. Body에 데이터가 들어간다. 즐겨찾기는 의미가 없다.</p><p class="desc">활용 예: 로그인 · 회원가입</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+<table class="ref-table"><thead><tr>
+<th>하고 싶은 일</th>
+<th>HTTP 메서드</th>
+</tr></thead><tbody>
+<tr><td>데이터 조회</td><td>GET</td></tr>
+<tr><td>새 데이터 생성</td><td>POST</td></tr>
+<tr><td>기존 데이터 수정</td><td>PUT 또는 PATCH</td></tr>
+<tr><td>데이터 삭제</td><td>DELETE</td></tr>
+</tbody></table>
+</div>
+</section>
+<section class="filepane" id="http-advanced">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▣</span>http-심화</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">10</span>HTTP 심화</div>
+<p class="intro">웹은 결국 '요청(Request)'과 '응답(Response)'을 주고받는 것이다. 이 규칙을 이해하면 백엔드가 훨씬 쉬워진다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">HTTP</h3></div><p class="desc"><span class="field-label desc-label">설명</span>브라우저와 서버가 데이터를 주고받을 때 지키는 통신 규칙(약속)이다. 웹사이트에 접속하는 모든 순간 이 규칙이 사용된다.</p><p class="tip"><span class="field-label tip-label">주의</span> 주소창에 https://... 를 칠 때마다 HTTP 통신이 일어나고 있다고 생각하면 된다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">GET</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 조회(읽기)할 때 사용한다. 서버의 데이터를 절대 바꾸면 안 된다.</p><pre class="code"><code>GET /posts        // 게시글 목록 조회
+GET /posts/<span class="num">35</span>     // 35번 게시글 조회</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">POST</h3></div><p class="desc"><span class="field-label desc-label">설명</span>새로운 데이터를 만들 때 사용한다. 데이터는 URL이 아닌 Body에 담아 보낸다.</p><p class="desc">활용 예: 회원가입 · 로그인 · 게시글 작성</p><pre class="code"><code>POST /users
+<span class="prop">Body</span>: { <span class="str">"name"</span>: <span class="str">"철수"</span>, <span class="str">"age"</span>: <span class="num">20</span> }</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">PUT</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 통째로(전체) 수정할 때 사용한다.</p><pre class="code"><code>PUT /users/<span class="num">15</span>
+<span class="prop">Body</span>: { <span class="str">"name"</span>: <span class="str">"영희"</span>, <span class="str">"age"</span>: <span class="num">22</span> }</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 회원정보를 전체 다 새 값으로 덮어쓸 때 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">PATCH</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터의 일부만 수정할 때 사용한다.</p><pre class="code"><code>PATCH /users/<span class="num">15</span>
+<span class="prop">Body</span>: { <span class="str">"age"</span>: <span class="num">23</span> }</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 닉네임이나 비밀번호처럼 한 항목만 바꿀 때는 PUT보다 PATCH가 더 알맞다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">DELETE</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 삭제할 때 사용한다.</p><pre class="code"><code>DELETE /posts/<span class="num">35</span></code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Headers</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요청/응답에 대한 부가 정보를 담는 곳이다. 누가 보냈는지, 어떤 형식의 데이터인지, 로그인 토큰 등을 담는다.</p><pre class="code"><code><span class="prop">Content-Type</span>: application/json
+<span class="prop">Authorization</span>: Bearer eyJhbGciOi...</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Body</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요청/응답에 실제로 담기는 데이터 내용물이다. 회원가입 폼에 입력한 이름, 이메일, 비밀번호 등이 여기에 담긴다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Request / Response</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Request : 클라이언트(브라우저)가 서버에게 '이거 해주세요' 하고 보내는 요청 Response : 서버가 그 요청을 처리하고 클라이언트에게 돌려주는 응답</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+<table class="ref-table"><thead><tr>
+<th>코드</th>
+<th>의미</th>
+<th>예시 상황</th>
+</tr></thead><tbody>
+<tr><td>200</td><td>성공</td><td>요청이 정상적으로 처리됨</td></tr>
+<tr><td>201</td><td>생성 성공</td><td>회원가입, 게시글 작성이 성공함</td></tr>
+<tr><td>301</td><td>영구 이동</td><td>페이지 주소가 다른 곳으로 바뀜</td></tr>
+<tr><td>400</td><td>잘못된 요청</td><td>필수 입력값이 빠지거나 형식이 틀림</td></tr>
+<tr><td>401</td><td>인증 필요</td><td>로그인을 하지 않은 상태로 접근함</td></tr>
+<tr><td>403</td><td>권한 없음</td><td>로그인은 했지만 접근 권한이 없음</td></tr>
+<tr><td>404</td><td>찾을 수 없음</td><td>없는 페이지나 데이터를 요청함</td></tr>
+<tr><td>500</td><td>서버 오류</td><td>서버 코드 안에서 에러가 발생함</td></tr>
+</tbody></table>
+</div>
+</section>
+<section class="filepane" id="express-advanced">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▣</span>express-심화</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">11</span>Express 심화</div>
+<p class="intro">요청이 들어왔을 때 그 안의 데이터를 꺼내고, 처리 흐름을 다루는 방법이다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">req.body</h3></div><p class="desc"><span class="field-label desc-label">설명</span>클라이언트가 POST/PUT/PATCH로 보낸 Body 데이터를 꺼낼 때 사용한다.</p><pre class="code"><code>app.post(<span class="str">"/users"</span>, (req, res) =&gt; {
+  console.log(req.body.name);
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">req.query</h3></div><p class="desc"><span class="field-label desc-label">설명</span>URL 뒤에 ?키=값 형태로 붙는 값을 꺼낼 때 사용한다.</p><pre class="code"><code><span class="cm">// GET /search?keyword=사과</span>
+app.get(<span class="str">"/search"</span>, (req, res) =&gt; {
+  console.log(req.query.keyword); // <span class="str">"사과"</span>
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">req.params</h3></div><p class="desc"><span class="field-label desc-label">설명</span>URL 경로 안에 포함된 값을 꺼낼 때 사용한다.</p><pre class="code"><code><span class="cm">// GET /users/15</span>
+app.get(<span class="str">"/users/:id"</span>, (req, res) =&gt; {
+  console.log(req.params.id); // <span class="str">"<span class="num">15</span>"</span>
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">req.headers</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요청에 담긴 헤더 정보를 꺼낼 때 사용한다. 로그인 토큰 확인 등에 쓴다.</p><pre class="code"><code>console.log(req.headers.authorization);</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Middleware</h3></div><p class="desc"><span class="field-label desc-label">설명</span>요청과 응답 사이에서 먼저 실행되는 함수이다. 로그 기록, 로그인 확인, 데이터 검사 등에 사용한다.</p><pre class="code"><code>app.use((req, res, next) =&gt; {
+  console.log(<span class="str">"요청이 들어왔다"</span>);
+  next(); // 다음 단계로 넘어간다
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Route</h3></div><p class="desc"><span class="field-label desc-label">설명</span>어떤 주소로 요청이 오면 어떤 함수를 실행할지 정하는 것이다.</p><pre class="code"><code>app.get(<span class="str">"/"</span>, (req, res) =&gt; {
+  res.send(<span class="str">"홈페이지"</span>);
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Static</h3></div><p class="desc"><span class="field-label desc-label">설명</span>이미지, css, js 같은 정적 파일을 그대로 제공할 때 사용한다.</p><pre class="code"><code>app.use(express.static(<span class="str">"public"</span>));</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">JSON</h3></div><p class="desc"><span class="field-label desc-label">설명</span>서버와 클라이언트가 데이터를 주고받을 때 가장 많이 쓰는 형식이다.</p><pre class="code"><code>app.use(express.json());
+
+app.get(<span class="str">"/user"</span>, (req, res) =&gt; {
+  res.json({ name: <span class="str">"철수"</span>, age: <span class="num">20</span> });
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Error Handling</h3></div><p class="desc"><span class="field-label desc-label">설명</span>에러가 발생했을 때 이를 처리하는 방법이다.</p><pre class="code"><code>app.use((err, req, res, next) =&gt; {
+  console.log(err);
+  res.status(<span class="num">500</span>).send(<span class="str">"서버 에러가 발생했습니다"</span>);
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">CORS</h3></div><p class="desc"><span class="field-label desc-label">설명</span>프론트엔드와 백엔드 주소(도메인)가 다를 때, 다른 주소에서 오는 요청을 허용할지 정하는 설정이다.</p><p class="tip"><span class="field-label tip-label">주의</span> React 등으로 만든 프론트가 다른 포트/도메인에서 API를 호출할 때 CORS 에러가 자주 발생한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="rest-api">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">◉</span>rest-api</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">12</span>REST API</div>
+<p class="intro">URL과 HTTP 메서드의 조합으로 '어떤 데이터를 어떻게 다룰지' 표현하는 설계 규칙이다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">REST API란</h3></div><p class="desc"><span class="field-label desc-label">설명</span>같은 주소라도 어떤 메서드(GET/POST/PUT/DELETE)를 쓰느냐에 따라 동작이 달라진다. 주소는 명사(데이터)로, 행동은 메서드로 표현하는 것이 규칙이다.</p><pre class="code"><code>GET    /posts       전체 게시글 조회
+POST   /posts       게시글 작성
+GET    /posts/<span class="num">35</span>    35번 게시글 조회
+PUT    /posts/<span class="num">35</span>    35번 게시글 수정
+DELETE /posts/<span class="num">35</span>    35번 게시글 삭제</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+<table class="ref-table"><thead><tr>
+<th>URL</th>
+<th>의미</th>
+</tr></thead><tbody>
+<tr><td>/users</td><td>전체 회원 목록</td></tr>
+<tr><td>/users/15</td><td>15번 회원 한 명</td></tr>
+<tr><td>/posts</td><td>전체 게시글 목록</td></tr>
+<tr><td>/posts/35</td><td>35번 게시글 한 개</td></tr>
+<tr><td>/comments</td><td>댓글 목록</td></tr>
+<tr><td>/products</td><td>상품 목록</td></tr>
+<tr><td>/orders</td><td>주문 목록</td></tr>
+</tbody></table>
+</div>
+</section>
+<section class="filepane" id="auth">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">🔑</span>로그인-시스템</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">13</span>로그인 시스템</div>
+<p class="intro">HTTP는 요청마다 서버가 '누구인지 기억하지 못한다.' 그래서 로그인 상태를 유지하는 여러 방법이 필요하다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Cookie</h3></div><p class="desc"><span class="field-label desc-label">설명</span>브라우저에 저장되는 작은 데이터 조각이다. 한 번 저장되면, 이후 같은 사이트로 보내는 모든 요청에 자동으로 함께 전달된다. 로그인 시스템에는 실제로 쿠키를 설정하고 읽는 코드가 함께 있어야 이해가 쉽다.</p><pre class="code"><code><span class="kw">const</span> cookieParser =
+require(<span class="str">"cookie-parser"</span>);
+
+app.use(cookieParser());
+
+app.post(<span class="str">"/login"</span>,(req,res)=&gt;{
+
+    res.cookie(
+        <span class="str">"username"</span>,
+        <span class="str">"jnc"</span>
+    );
+
+    res.send(<span class="str">"로그인"</span>);
+
+});</code></pre><p class="desc">쿠키에 저장한 값은 이후 요청에서 req.cookies로 읽을 수 있다.</p><pre class="code"><code>app.get(<span class="str">"/"</span>,(req,res)=&gt;{
+    console.log(
+        req.cookies.username
+    );
+});</code></pre><div class="result"><span class="field-label">결과</span><pre>로그인 요청 시 브라우저에 username=jnc 쿠키가 저장되고, 이후 "/" 요청에서 req.cookies.username으로 "jnc" 값을 읽을 수 있음</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">cookie-parser</span><span class="rel-tag">Session</span><span class="rel-tag">req.cookies</span></p><p class="tip"><span class="field-label tip-label">주의</span> 쿠키에 비밀번호 같은 민감한 정보를 직접 저장하면 안 된다. 로그인 상태 유지에는 세션 ID나 토큰처럼 그 자체로는 의미 없는 값을 저장하는 것이 안전하다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Session</h3></div><p class="desc"><span class="field-label desc-label">설명</span>서버가 로그인한 사용자의 정보를 기억해두는 방식이다. 쿠키만 알면 "브라우저에 데이터가 저장된다"는 것만 알지, 실제 로그인이 어떻게 유지되는지는 이해하기 어렵다. 세션의 핵심은 실제 데이터(누가 로그인했는지)는 서버가 갖고 있고, 브라우저 쿠키에는 그 데이터를 찾을 수 있는 "세션 ID"라는 열쇠만 저장된다는 점이다.</p><pre class="code"><code>로그인
+↓
+session = asd81273
+↓
+브라우저 쿠키 저장
+↓
+다음 요청
+↓
+Cookie:
+session=asd81273
+↓
+서버
+↓
+로그인 상태 확인</code></pre><div class="result"><span class="field-label">결과</span><pre>로그인 이후 모든 요청에 세션 ID가 자동으로 딸려가고, 서버는 그 ID로 "이 사람이 누구인지"를 매번 확인해 로그인 상태를 유지함</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">Cookie</span><span class="rel-tag">express-session</span><span class="rel-tag">JWT(세션 없는 대안)</span></p><p class="tip"><span class="field-label tip-label">주의</span> 세션 ID 자체는 의미 없는 랜덤 문자열이어야 한다. 아이디나 비밀번호처럼 추측 가능한 값을 세션 ID로 쓰면 안 된다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">JWT</h3></div><p class="desc"><span class="field-label desc-label">설명</span>로그인 정보를 암호화된 토큰(문자열) 형태로 만들어 주고받는 방식이다. 서버가 따로 저장하지 않아도 토큰 자체에 정보가 들어있다.</p><pre class="code"><code><span class="prop">Authorization</span>: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Access Token</h3></div><p class="desc"><span class="field-label desc-label">설명</span>로그인 성공 후 발급되는, 실제 요청에 사용하는 토큰이다. 유효기간이 짧다(보안을 위해).</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Refresh Token</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Access Token이 만료됐을 때 새 Access Token을 다시 발급받기 위한 토큰이다. 유효기간이 Access Token보다 길다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Authorization</h3></div><p class="desc"><span class="field-label desc-label">설명</span>로그인한 사용자가 요청 헤더에 토큰을 담아 보내는 것이다. 서버는 이 값을 보고 '이 사람이 무엇을 할 수 있는지' 권한을 확인한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Authentication</h3></div><p class="desc"><span class="field-label desc-label">설명</span>'이 사람이 누구인지' 확인하는 과정, 즉 로그인 자체를 의미한다.</p><p class="tip"><span class="field-label tip-label">주의</span> Authentication(인증) = 신원 확인, Authorization(인가) = 권한 확인. 헷갈리기 쉬우니 구분해서 기억하자.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">로그인 전체 흐름</h3></div><p class="desc"><span class="field-label desc-label">설명</span>지금까지 배운 HTML form, fetch, Express, MySQL, bcrypt, Session, Cookie가 실제로는 하나의 흐름으로 전부 연결되어 있다. 이 흐름 하나만 이해하면 로그인 시스템의 각 조각이 왜 필요한지 알 수 있다.</p><pre class="code"><code>HTML
+↓
+JavaScript
+↓
+fetch()
+↓
+Express
+|
+V
+MySQL
+↓
+비밀번호 확인
+↓
+bcrypt
+↓
+Session 생성
+↓
+Cookie 저장
+↓
+로그인 완료</code></pre><div class="result"><span class="field-label">결과</span><pre>사용자가 로그인 버튼을 누르는 순간부터, 값이 서버로 전달되고 → DB에서 확인되고 → 암호화 검증을 거쳐 → 세션이 만들어지고 → 브라우저에 쿠키로 저장되기까지의 전체 과정이 한 흐름으로 연결됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">form</span><span class="rel-tag">fetch()</span><span class="rel-tag">bcrypt</span><span class="rel-tag">Session</span><span class="rel-tag">Cookie</span></p><p class="tip"><span class="field-label tip-label">주의</span> 어느 한 단계라도 빠지면 로그인 시스템이 동작하지 않는다. 처음 배울 때는 이 순서를 통째로 외워두면 각 기술을 따로 배울 때도 "지금 이게 전체 흐름의 어디쯤인지" 헷갈리지 않는다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">응용 예제</h3></div><p class="desc"><span class="field-label desc-label">설명</span>로그인 시스템을 배운 뒤에는, 아래처럼 실제 서비스 하나를 통째로 만들어보는 것이 가장 좋은 복습이다.</p><pre class="code"><code>로그인 페이지 만들기
+↓
+회원가입
+↓
+로그인
+↓
+로그인 성공하면
+메인 페이지 이동
+↓
+로그아웃
+↓
+관리자 페이지 접근 제한</code></pre><div class="result"><span class="field-label">결과</span><pre>회원가입 → 로그인 → 메인 이동 → 로그아웃 → 권한에 따른 접근 제한까지, 로그인 시스템의 처음부터 끝까지를 하나의 미니 프로젝트로 경험하게 됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">로그인 전체 흐름</span><span class="rel-tag">Middleware(접근 제한)</span><span class="rel-tag">Session</span></p><p class="tip"><span class="field-label tip-label">주의</span> 관리자 페이지 접근 제한은 프론트에서 숨기는 것만으로는 부족하다. 반드시 서버(Express 미들웨어)에서도 권한을 다시 한번 확인해야 안전하다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="encryption">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">🔐</span>암호화</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">14</span>암호화</div>
+<p class="intro">비밀번호를 그대로 데이터베이스에 저장하면 절대 안 된다. 반드시 암호화해서 저장해야 한다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">bcrypt</h3></div><p class="desc"><span class="field-label desc-label">설명</span>비밀번호를 안전하게 암호화해주는 대표적인 라이브러리이다.</p><pre class="code"><code><span class="kw">const</span> bcrypt = require(<span class="str">"bcrypt"</span>);
+
+<span class="kw">const</span> hashed = await bcrypt.hash(password, <span class="num">10</span>);   // 암호화
+<span class="kw">const</span> isMatch = await bcrypt.compare(password, hashed); // 비교</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">hash</h3></div><p class="desc"><span class="field-label desc-label">설명</span>원래 값을 알아볼 수 없는 값으로 바꾸는 것이다. 한 번 암호화하면 다시 원래 값으로 되돌릴 수 없다(복호화 불가).</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">salt</h3></div><p class="desc"><span class="field-label desc-label">설명</span>같은 비밀번호라도 매번 다른 결과가 나오도록 섞어주는 랜덤 값이다. 같은 비밀번호를 쓰는 두 사람의 저장값이 서로 달라진다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">password 암호화</h3></div><p class="desc"><span class="field-label desc-label">설명</span>회원가입 시 입력받은 비밀번호는 절대 그대로 저장하지 않고, hash + salt로 암호화한 값만 저장한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 로그인할 때는 입력한 비밀번호를 다시 암호화해서 저장된 값과 비교(compare)한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="database">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">▤</span>데이터베이스</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">15</span>데이터베이스</div>
+<p class="intro">회원 정보, 게시글, 댓글 같은 데이터를 안전하게 저장하고 꺼내 쓰는 창고이다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">MySQL</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 표(테이블) 형태로 저장하고 관리하는 대표적인 데이터베이스 프로그램이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Database</h3></div><p class="desc"><span class="field-label desc-label">설명</span>여러 테이블을 모아두는 큰 창고이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Table</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 표 형태로 저장하는 공간이다. 엑셀 시트와 비슷하다고 생각하면 쉽다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Column / Row</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Column(열) : 표의 세로줄. 하나의 속성이다. 예: 이름, 나이, 이메일 Row(행) : 표의 가로줄. 데이터 한 건(한 사람, 한 게시글)을 의미한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Primary Key</h3></div><p class="desc"><span class="field-label desc-label">설명</span>각 행(Row)을 구분하는 고유한 값이다. 중복되면 안 된다.</p><p class="tip"><span class="field-label tip-label">주의</span> 회원 테이블의 id처럼, 절대 겹치지 않는 값을 기본키로 정한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Foreign Key</h3></div><p class="desc"><span class="field-label desc-label">설명</span>다른 테이블과 연결하기 위해 사용하는 값이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 게시글 테이블에 작성자의 회원 id를 저장해두면, 그 게시글이 누가 쓴 글인지 알 수 있다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">INSERT</h3></div><p class="desc"><span class="field-label desc-label">설명</span>새 데이터를 추가할 때 사용한다.</p><pre class="code"><code>INSERT INTO users (name, age) VALUES (<span class="str">"철수"</span>, <span class="num">20</span>);</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">SELECT</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 조회할 때 사용한다.</p><pre class="code"><code>SELECT * FROM users;
+SELECT name FROM users WHERE age &gt;= <span class="num">20</span>;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">UPDATE</h3></div><p class="desc"><span class="field-label desc-label">설명</span>기존 데이터를 수정할 때 사용한다.</p><pre class="code"><code>UPDATE users SET age = <span class="num">21</span> WHERE id = <span class="num">15</span>;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">DELETE</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 삭제할 때 사용한다.</p><pre class="code"><code>DELETE FROM users WHERE id = <span class="num">15</span>;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">JOIN</h3></div><p class="desc"><span class="field-label desc-label">설명</span>두 개 이상의 테이블을 연결해서 함께 조회할 때 사용한다.</p><pre class="code"><code>SELECT posts.title, users.name
+FROM posts
+JOIN users ON posts.user_id = users.id;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="nodejs-mysql">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">⚙</span>nodejs-mysql-실전</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">16</span>Node.js + MySQL 실전</div>
+<p class="intro">지금까지 배운 Express와 데이터베이스를 합쳐 실제 기능을 만드는 흐름이다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">회원가입 (실전)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>입력받은 정보를 확인 → 비밀번호를 bcrypt로 암호화 → users 테이블에 INSERT 하는 순서로 동작한다. req.body에서 값을 꺼내 바로 DB에 저장하는 실제 코드 형태는 아래와 같다.</p><pre class="code"><code>app.post(<span class="str">"/signup"</span>,
+async(req,res)=&gt;{
+    const{
+        username,
+        password
+    }=req.body;
+    await db.query(
+        <span class="str">"INSERT INTO users(username,password) VALUES (?,?)"</span>,
+        [username,password]
+    );
+});</code></pre><div class="result"><span class="field-label">결과</span><pre>회원가입 form에서 name="username", name="password"로 보낸 값이 req.body로 들어오고, users 테이블에 새 행(Row)으로 저장됨</pre></div><p class="related"><span class="field-label">속성·개념</span><span class="rel-tag">req.body</span><span class="rel-tag">bcrypt</span><span class="rel-tag">INSERT</span></p><p class="tip"><span class="field-label tip-label">주의</span> 이 예시는 이해를 돕기 위해 단순화한 것이다. 실무에서는 password를 그대로 저장하지 않고, 반드시 bcrypt.hash()로 암호화한 값을 INSERT해야 한다. 또한 SQL 인젝션을 막기 위해 값은 반드시 ? 자리표시자(placeholder)로 전달해야 한다(문자열 직접 조합 금지).</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">로그인</h3></div><p class="desc"><span class="field-label desc-label">설명</span>이메일로 회원을 SELECT로 찾음 → 입력한 비밀번호를 bcrypt.compare로 비교 → 맞으면 토큰(JWT)이나 세션을 발급하는 순서로 동작한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">게시글</h3></div><p class="desc"><span class="field-label desc-label">설명</span>글쓰기는 posts 테이블에 INSERT, 목록 보기는 SELECT, 상세보기는 id로 SELECT, 삭제는 DELETE로 구현한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">댓글</h3></div><p class="desc"><span class="field-label desc-label">설명</span>comments 테이블에 어떤 게시글(post_id)의 댓글인지 Foreign Key로 연결해서 저장한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">좋아요</h3></div><p class="desc"><span class="field-label desc-label">설명</span>누가(user_id) 어떤 게시글(post_id)에 눌렀는지 저장하는 테이블을 따로 만들어 중복 여부를 확인한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">검색</h3></div><p class="desc"><span class="field-label desc-label">설명</span>입력한 검색어를 SQL의 LIKE 구문으로 제목이나 내용에서 찾는다.</p><pre class="code"><code>SELECT * FROM posts WHERE title LIKE <span class="str">'%검색어%'</span>;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="file-upload">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">📁</span>파일-업로드</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">17</span>파일 업로드</div>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">multer</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Node.js/Express에서 이미지, 동영상 같은 파일을 업로드 처리해주는 대표적인 라이브러리이다.</p><pre class="code"><code><span class="kw">const</span> multer = require(<span class="str">"multer"</span>);
+<span class="kw">const</span> upload = multer({ dest: <span class="str">"uploads/"</span> });
+
+app.post(<span class="str">"/upload"</span>, upload.single(<span class="str">"photo"</span>), (req, res) =&gt; {
+  console.log(req.file);
+  res.send(<span class="str">"업로드 완료"</span>);
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">이미지 업로드</h3></div><p class="desc"><span class="field-label desc-label">설명</span>HTML form에서 file 타입 input으로 이미지를 선택해서 서버로 전송한다.</p><pre class="code"><code>&lt;<span class="tag">form</span> action=<span class="str">"/upload"</span> method=<span class="str">"POST"</span> enctype=<span class="str">"multipart/form-data"</span>&gt;
+  &lt;<span class="tag">input</span> type=<span class="str">"file"</span> name=<span class="str">"photo"</span>&gt;
+  &lt;<span class="tag">button</span>&gt;업로드&lt;/<span class="tag">button</span>&gt;
+&lt;/<span class="tag">form</span>&gt;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">프로필 사진</h3></div><p class="desc"><span class="field-label desc-label">설명</span>업로드된 이미지의 저장 경로를 회원 테이블의 컬럼(예: profile_img)에 저장해서 불러온다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">다운로드</h3></div><p class="desc"><span class="field-label desc-label">설명</span>서버에 저장된 파일을 사용자가 내려받을 수 있게 해준다.</p><pre class="code"><code>app.get(<span class="str">"/download"</span>, (req, res) =&gt; {
+  res.download(<span class="str">"uploads/file.png"</span>);
+});</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="security">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">🛡</span>보안</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">18</span>보안</div>
+<p class="intro">서버를 만들 때는 기능만큼이나 '악의적인 공격을 막는 것'도 중요하다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">XSS (Cross-Site Scripting)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>게시글이나 댓글 등에 악성 스크립트를 심어서, 다른 사용자가 그 글을 볼 때 스크립트가 실행되게 하는 공격이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 사용자가 입력한 내용을 그대로 화면에 출력하지 말고 이스케이프 처리해야 한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">CSRF (Cross-Site Request Forgery)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>로그인한 사용자가 자신도 모르게 원치 않는 요청을 서버로 보내게 만드는 공격이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">SQL Injection</h3></div><p class="desc"><span class="field-label desc-label">설명</span>입력창에 SQL 구문을 끼워 넣어서 데이터베이스를 조작하거나 정보를 빼내는 공격이다.</p><pre class="code"><code>-- 공격 예시
+SELECT * FROM users WHERE email = <span class="str">''</span> OR <span class="str">'<span class="num">1</span>'</span>=<span class="str">'<span class="num">1</span>'</span>;</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 쿼리를 직접 문자열로 조립하지 말고, 파라미터 바인딩(placeholder)을 사용해야 막을 수 있다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">CORS</h3></div><p class="desc"><span class="field-label desc-label">설명</span>허용되지 않은 다른 도메인에서의 요청을 막아주는 브라우저의 보안 정책이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Helmet</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Express에서 보안 관련 HTTP 헤더들을 자동으로 설정해주는 미들웨어이다.</p><pre class="code"><code><span class="kw">const</span> helmet = require(<span class="str">"helmet"</span>);
+app.use(helmet());</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Rate Limit</h3></div><p class="desc"><span class="field-label desc-label">설명</span>짧은 시간 안에 너무 많은 요청이 들어오는 것을 막아주는 기능이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 로그인 시도를 무한 반복하는 공격(무차별 대입 공격)을 막을 때 유용하다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">HTTPS</h3></div><p class="desc"><span class="field-label desc-label">설명</span>데이터를 암호화해서 주고받는 통신 방식이다. HTTP에 보안(SSL/TLS)이 추가된 것이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="deploy">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">☁</span>서버-배포</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">19</span>서버 배포</div>
+<p class="intro">내 컴퓨터에서만 돌아가던 서버를, 누구나 인터넷으로 접속할 수 있게 올리는 과정이다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Linux / Ubuntu</h3></div><p class="desc"><span class="field-label desc-label">설명</span>서버용으로 가장 많이 쓰이는 운영체제이다. Ubuntu는 그중에서도 초보자가 접근하기 쉬운 배포판이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Nginx</h3></div><p class="desc"><span class="field-label desc-label">설명</span>들어오는 요청을 적절한 서버로 분배해주는 웹 서버 프로그램이다. 정적 파일을 직접 처리하거나, Node.js 서버 앞단에서 요청을 넘겨주는 역할(리버스 프록시)을 한다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">PM2</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Node.js 서버가 중간에 꺼지지 않도록 관리해주는 프로그램이다. 서버가 죽으면 자동으로 다시 켜준다.</p><pre class="code"><code>pm2 start app.js
+pm2 restart app
+pm2 logs</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Domain</h3></div><p class="desc"><span class="field-label desc-label">설명</span>IP 주소(숫자) 대신 사람이 읽기 쉽게 만든 주소이다. 예: example.com</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">HTTPS</h3></div><p class="desc"><span class="field-label desc-label">설명</span>배포된 사이트에 인증서를 적용해서 암호화 통신이 가능하게 만드는 것이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Cloudflare</h3></div><p class="desc"><span class="field-label desc-label">설명</span>도메인 관리, 보안, 속도 향상(CDN)을 무료로 제공해주는 대표적인 서비스이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">AWS (VPS)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>클라우드에서 서버로 쓸 컴퓨터를 빌리는 서비스이다. VPS는 '가상 사설 서버'의 줄임말로, 하나의 물리 서버를 여러 개로 나눠 빌려주는 방식이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Docker (기초)</h3></div><p class="desc"><span class="field-label desc-label">설명</span>프로그램을 실행 환경(설정, 라이브러리 포함)째로 포장해서, 어디서 실행해도 똑같이 동작하게 해주는 기술이다.</p><p class="tip"><span class="field-label tip-label">주의</span> '내 컴퓨터에서는 되는데 서버에서는 안 돼요' 문제를 크게 줄여준다.</p></div>
+</div>
+</div>
+</section>
+<section class="filepane" id="git">
+<div class="tab-bar">
+<div class="tab active"><span class="tab-icon">⎇</span>git</div>
+</div>
+<div class="pane-body">
+<div class="pane-title"><span class="pane-num">20</span>Git</div>
+<p class="intro">코드가 바뀌어온 과정을 기록하고, 여러 사람과 함께 협업할 수 있게 해주는 도구이다.</p>
+<div class="entries">
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Git</h3></div><p class="desc"><span class="field-label desc-label">설명</span>코드의 변경 이력을 저장하고 관리해주는 프로그램이다. 예전 버전으로 되돌리거나, 누가 무엇을 바꿨는지 확인할 수 있다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">GitHub</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Git으로 관리하는 코드를 온라인에 저장하고 다른 사람과 공유할 수 있는 사이트이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Commit</h3></div><p class="desc"><span class="field-label desc-label">설명</span>지금까지의 변경사항을 하나의 기록(스냅샷)으로 저장하는 것이다.</p><pre class="code"><code>git add .
+git commit -m <span class="str">"로그인 기능 추가"</span></code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Push / Pull</h3></div><p class="desc"><span class="field-label desc-label">설명</span>Push : 내 컴퓨터(로컬)의 커밋을 GitHub(원격 저장소)로 올리는 것 Pull : 원격 저장소의 최신 코드를 내 컴퓨터로 받아오는 것</p><pre class="code"><code>git push origin main
+git pull origin main</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Branch</h3></div><p class="desc"><span class="field-label desc-label">설명</span>원본 코드에서 갈라져 나와, 독립적으로 기능을 개발할 수 있는 가지이다.</p><pre class="code"><code>git branch login-feature
+git checkout login-feature</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">Merge</h3></div><p class="desc"><span class="field-label desc-label">설명</span>다른 브랜치에서 작업한 내용을 원래 브랜치로 다시 합치는 것이다.</p><pre class="code"><code>git checkout main
+git merge login-feature</code></pre><p class="tip"><span class="field-label tip-label">주의</span> 특별히 언급된 주의사항은 없다. 예시와 결과를 참고해 정확한 문법으로 사용한다.</p></div>
+<div class="entry"><div class="entry-head"><span class="dot"></span><h3 class="term">GitHub Pages</h3></div><p class="desc"><span class="field-label desc-label">설명</span>GitHub 저장소를 이용해서 무료로 정적 웹사이트를 호스팅할 수 있는 기능이다.</p><p class="tip"><span class="field-label tip-label">주의</span> 포트폴리오 사이트나 간단한 프론트엔드 프로젝트를 무료로 배포할 때 많이 사용한다.</p></div>
+</div>
+</div>
+</section>
+<footer>강의노트 — 마지막 업데이트 자동 생성</footer>
+</div>
+</div>
+</div>
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const tocItems = document.querySelectorAll('.toc-item');
+  const crumb = document.getElementById('crumb');
+  const sections = document.querySelectorAll('.filepane');
+
+  function setActive(id) {
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.id === id));
+    tocItems.forEach(n => n.classList.toggle('active', n.dataset.id === id));
+    const activeNav = document.querySelector('.nav-item.active .nav-name');
+    if (activeNav) crumb.textContent = activeNav.textContent;
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => setActive(item.dataset.id));
+  });
+  tocItems.forEach(item => {
+    item.addEventListener('click', () => setActive(item.dataset.id));
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setActive(entry.target.id);
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  /* ================= 접기/펼치기 + 코드 복사 + 검색 + 맨 위 버튼 ================= */
+
+  // 1) 각 entry를 head / body로 분리하고 접기·펼치기 토글 추가
+  document.querySelectorAll('.entry').forEach(entry => {
+    const head = entry.querySelector('.entry-head');
+    if (!head) return;
+    const body = document.createElement('div');
+    body.className = 'entry-body';
+    [...entry.children].forEach(child => {
+      if (child !== head) body.appendChild(child);
+    });
+    entry.appendChild(body);
+
+    const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    chevron.setAttribute('class', 'entry-chevron');
+    chevron.setAttribute('viewBox', '0 0 24 24');
+    chevron.setAttribute('fill', 'none');
+    chevron.setAttribute('stroke', 'currentColor');
+    chevron.setAttribute('stroke-width', '2');
+    chevron.setAttribute('stroke-linecap', 'round');
+    chevron.setAttribute('stroke-linejoin', 'round');
+    chevron.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+    head.appendChild(chevron);
+
+    head.addEventListener('click', () => entry.classList.toggle('collapsed'));
+  });
+
+  // 2) 코드 블록마다 복사 버튼 추가 (클립보드 API 실패 시 구형 방식으로 자동 대체)
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  document.querySelectorAll('pre.code').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.type = 'button';
+    btn.textContent = '복사';
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const codeEl = pre.querySelector('code');
+      const text = codeEl ? codeEl.innerText : pre.innerText;
+
+      const showCopied = () => {
+        btn.textContent = '복사됨 ✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 1500);
+      };
+      const showFailed = () => {
+        btn.textContent = '복사 실패';
+        setTimeout(() => { btn.textContent = '복사'; }, 1500);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(showCopied).catch(() => {
+          fallbackCopy(text) ? showCopied() : showFailed();
+        });
+      } else {
+        fallbackCopy(text) ? showCopied() : showFailed();
+      }
+    });
+    pre.appendChild(btn);
+  });
+
+  // 3) 검색창 (사이드바 상단에 삽입) — 제목/설명/코드/주의사항 전체 텍스트 대상 검색
+  const sidebarTitleEl = document.querySelector('.sidebar-title');
+  const searchWrap = document.createElement('div');
+  searchWrap.className = 'sidebar-search';
+  searchWrap.innerHTML = `
+    <div class="sidebar-search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="docSearch" placeholder="검색 (제목·설명·코드)">
+    </div>`;
+  sidebarTitleEl.insertAdjacentElement('afterend', searchWrap);
+
+  const countEl = document.createElement('div');
+  countEl.className = 'search-result-count';
+  countEl.id = 'searchCount';
+  searchWrap.insertAdjacentElement('afterend', countEl);
+
+  const searchInput = document.getElementById('docSearch');
+  const allEntries = [...document.querySelectorAll('.entry')];
+  const allPanes = [...document.querySelectorAll('.filepane')];
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) {
+      allEntries.forEach(en => en.classList.remove('search-hidden'));
+      allPanes.forEach(p => p.classList.remove('search-hidden'));
+      countEl.textContent = '';
+      return;
+    }
+    let matchCount = 0;
+    allPanes.forEach(pane => {
+      let paneMatch = 0;
+      pane.querySelectorAll('.entry').forEach(en => {
+        const hit = en.textContent.toLowerCase().includes(q);
+        en.classList.toggle('search-hidden', !hit);
+        if (hit) {
+          matchCount++;
+          paneMatch++;
+          en.classList.remove('collapsed'); // 검색 결과는 펼쳐서 보여줌
+        }
+      });
+      pane.classList.toggle('search-hidden', paneMatch === 0);
+    });
+    countEl.textContent = matchCount + '개 항목 일치';
+  });
+
+  // 4) 맨 위로 버튼
+  const topBtn = document.createElement('button');
+  topBtn.className = 'top-btn';
+  topBtn.type = 'button';
+  topBtn.setAttribute('aria-label', '맨 위로');
+  topBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>';
+  document.body.appendChild(topBtn);
+  window.addEventListener('scroll', () => {
+    topBtn.classList.toggle('show', window.scrollY > 400);
+  });
+  topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+</body>
+</html>
